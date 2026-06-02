@@ -40,9 +40,10 @@ html{height:100%;overflow:hidden}body{min-height:100%;margin:0;background:#000;c
 <button disabled data-c=mute>Mute</button>
 <button disabled id=vol title=Volume><div><div><div></div></div></div></button>
 </div>
+<button id=pit-remap-toggle type=button aria-pressed=false title="Toggle arrow and Enter pit stop key remap">Pit keys off</button>
 </div>
 <div class=info style=margin-top:1em>Emulator Controls:<dl class=keys>
-<dt>F1<dd><a href=/qaop/info.html target=_top>emulator info</a><dt>F2<dd>save<dt>F3<dd>load<dt>F7<dd>black &amp; white<dt>F8<dd>keyboard layout<dt>F9<dd>menu<dt>F11<dd>full screen<dt>Pause<dd>pause<dt>Ctrl-O<dd>Load from disk<dt>Ctrl-S<dd>Save to disk<dt></div>
+<dt>F1<dd><a href=/qaop/info.html target=_top>emulator info</a><dt>F2<dd>save<dt>F3<dd>load<dt>F7<dd>black &amp; white<dt>F8<dd>keyboard layout<dt>F9<dd>menu<dt>F11<dd>full screen<dt>Pause<dd>pause<dt>Ctrl-O<dd>Load from disk<dt>Ctrl-S<dd>Save to disk<dt>Pit keys<dd>optional arrow remap in full-screen play<dt></div>
 </div>
 <a style='position:absolute;bottom:4px;left:0;right:0;text-align:center;letter-spacing:4px;font-size:11px;opacity:.7' href=/index.html rel=author>© Jan Bobrowski | Ethan Friedman</a>
 </div>
@@ -64,4 +65,88 @@ html{height:100%;overflow:hidden}body{min-height:100%;margin:0;background:#000;c
 <div style=visibility:hidden><a rel=help href=/qaop/info target=_top>help</a><a id=save></a><input id=open type=file accept='.tap,.z80,.sna,.scr,.rom'>
 <form id=submit hidden onsubmit='event.preventDefault();document.activeElement.onenter()'></form><input id=bb>
 </div>
+<script>
+if (!location.hash) location.hash = "/seasons/f12023-modern.sna";
+</script>
 <script src=/qaop/qaop.js></script>
+<script>
+(() => {
+  const button = document.getElementById("pit-remap-toggle");
+  const keyMap = {
+    ArrowLeft: 81,
+    ArrowDown: 90,
+    ArrowUp: 73,
+    ArrowRight: 80,
+    Enter: 78,
+  };
+  const active = new Map();
+  let enabled = false;
+
+  function setEnabled(next) {
+    enabled = !!next;
+    button.setAttribute("aria-pressed", String(enabled));
+    button.textContent = enabled ? "Pit keys on" : "Pit keys off";
+    button.classList.toggle("active", enabled);
+    if (!enabled) releaseAll();
+  }
+
+  function editableTarget(target) {
+    return target && (
+      target.isContentEditable ||
+      /^(INPUT|TEXTAREA|SELECT)$/i.test(target.nodeName)
+    );
+  }
+
+  function canStartRemap(event) {
+    return enabled &&
+      document.body.classList.contains("full") &&
+      !event.altKey &&
+      !event.ctrlKey &&
+      !event.metaKey &&
+      !editableTarget(event.target);
+  }
+
+  function sendKey(keyCode, isDown) {
+    if (window.emu && typeof window.emu.kbd === "function") {
+      window.emu.kbd(~keyCode, isDown, 0);
+    }
+  }
+
+  function releaseAll() {
+    for (const keyCode of active.values()) sendKey(keyCode, false);
+    active.clear();
+  }
+
+  function handleKey(event) {
+    const mapped = keyMap[event.key];
+    if (!mapped) return;
+
+    if (event.type === "keyup" && active.has(event.key)) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      sendKey(active.get(event.key), false);
+      active.delete(event.key);
+      return;
+    }
+
+    if (event.type !== "keydown" || event.repeat || !canStartRemap(event)) return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    active.set(event.key, mapped);
+    sendKey(mapped, true);
+  }
+
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
+    setEnabled(!enabled);
+    document.getElementById("c").focus();
+  });
+  window.addEventListener("keydown", handleKey, true);
+  window.addEventListener("keyup", handleKey, true);
+  window.addEventListener("blur", releaseAll);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) releaseAll();
+  });
+})();
+</script>

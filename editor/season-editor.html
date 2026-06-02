@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RetroF1M SNA Season Editor</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #101112;
+      --panel: #191b1f;
+      --panel-2: #22252a;
+      --text: #f2f2f0;
+      --muted: #a8adb7;
+      --line: #343943;
+      --accent: #e04f5f;
+      --accent-2: #65c18c;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 14px/1.45 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(16, 17, 18, .96);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    main {
+      display: grid;
+      gap: 14px;
+      padding: 16px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .status {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    button,
+    .file-label {
+      min-height: 32px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 6px 11px;
+      background: var(--panel-2);
+      color: var(--text);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button.primary {
+      border-color: #7c2730;
+      background: var(--accent);
+      color: #fff;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: .45;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    section {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .hint {
+      margin: -4px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      min-height: 120px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 10px;
+      background: #0b0c0e;
+      color: var(--text);
+      font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      resize: vertical;
+    }
+
+    #points {
+      min-height: 42px;
+    }
+
+    #circuits {
+      min-height: 290px;
+      white-space: pre;
+    }
+
+    .wide {
+      grid-column: 1 / -1;
+    }
+
+    .ok {
+      color: var(--accent-2);
+    }
+
+    .error {
+      color: #ff8d8d;
+    }
+
+    @media (max-width: 900px) {
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .toolbar {
+        margin-left: 0;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>RetroF1M SNA Season Editor</h1>
+      <div class="status" id="status">Load a 48K Formula One .sna snapshot to begin.</div>
+    </div>
+    <div class="toolbar">
+      <label class="file-label" for="file">Load .sna</label>
+      <input id="file" type="file" accept=".sna">
+      <button id="downloadJson" type="button" disabled>Download JSON</button>
+      <button id="downloadSna" class="primary" type="button" disabled>Download patched .sna</button>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Points</h2>
+      <p class="hint">Comma-separated race points. The writer patches the award loop to the number of non-zero entries here.</p>
+      <textarea id="points" spellcheck="false"></textarea>
+    </section>
+
+    <section>
+      <h2>People and Teams</h2>
+      <div class="grid">
+        <label>Drivers, 24 slots, 10 chars each
+          <textarea id="drivers" spellcheck="false"></textarea>
+        </label>
+        <label>Teams, 8 slots, 8 chars each
+          <textarea id="teams" spellcheck="false"></textarea>
+        </label>
+        <label>Managers, 6 slots, 10 chars each
+          <textarea id="managers" spellcheck="false"></textarea>
+        </label>
+        <label>Special driver labels, 2 slots, 10 chars each
+          <textarea id="driverSpecials" spellcheck="false"></textarea>
+        </label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Circuits</h2>
+      <p class="hint">Tab-separated columns: name, laps, track length hundredths of miles, lap record tenths, race record tenths, record year, four driver/reference bytes.</p>
+      <textarea id="circuits" spellcheck="false"></textarea>
+      <div class="grid">
+        <label>Circuit grid text, exactly 127 chars
+          <textarea id="circuitGridText" spellcheck="false"></textarea>
+        </label>
+        <label>Track report grid text, exactly 127 chars
+          <textarea id="trackReportGridText" spellcheck="false"></textarea>
+        </label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Commercial and Race Text</h2>
+      <div class="grid">
+        <label>Sponsors, 13 slots, 12 chars each
+          <textarea id="sponsors" spellcheck="false"></textarea>
+        </label>
+        <label>Failure and incident text, 14 slots, 32 chars each
+          <textarea id="incidents" spellcheck="false"></textarea>
+        </label>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const SNA_SIZE = 49179;
+    const OFFSETS = {
+      drivers: { offset: 11948, count: 24, width: 10 },
+      driverSpecials: { offset: 12188, count: 2, width: 10 },
+      teams: { offset: 12216, count: 8, width: 8 },
+      managers: { offset: 12286, count: 6, width: 10 },
+      circuitGridText: { offset: 12353, length: 127 },
+      circuits: { offset: 12480, count: 16, width: 18 },
+      lapCounts: { offset: 10992, count: 16 },
+      lapRecordTenths: { offset: 11008, count: 16 },
+      raceRecordTenths: { offset: 11040, count: 16 },
+      circuitDriverRefs: { offset: 11072, count: 16, width: 4 },
+      trackLengthHundredths: { offset: 11136, count: 16 },
+      lapRecordYears: { offset: 11168, count: 16 },
+      points: { offset: 15281, count: 16 },
+      incidents: { offset: 15370, count: 14, width: 32 },
+      sponsors: { offset: 18316, count: 13, width: 12 },
+      trackReportGridText: { offset: 21534, length: 127 },
+      lapCountsDisplay: { offset: 21665, length: 32 },
+    };
+    const POINTS_LOOP_SIGNATURE = [0x3e, null, 0xb8, 0xd2, 0x54, 0xce];
+
+    const els = {
+      file: document.getElementById("file"),
+      status: document.getElementById("status"),
+      downloadJson: document.getElementById("downloadJson"),
+      downloadSna: document.getElementById("downloadSna"),
+      points: document.getElementById("points"),
+      drivers: document.getElementById("drivers"),
+      driverSpecials: document.getElementById("driverSpecials"),
+      teams: document.getElementById("teams"),
+      managers: document.getElementById("managers"),
+      circuits: document.getElementById("circuits"),
+      circuitGridText: document.getElementById("circuitGridText"),
+      trackReportGridText: document.getElementById("trackReportGridText"),
+      sponsors: document.getElementById("sponsors"),
+      incidents: document.getElementById("incidents"),
+    };
+
+    let sourceBytes = null;
+    let sourceName = "season.sna";
+
+    function setStatus(message, type = "") {
+      els.status.textContent = message;
+      els.status.className = `status ${type}`;
+    }
+
+    function decoder(bytes) {
+      return Array.from(bytes, (value) => String.fromCharCode(value)).join("");
+    }
+
+    function readText(bytes, offset, length) {
+      return decoder(bytes.slice(offset, offset + length));
+    }
+
+    function trimRight(text) {
+      return text.replace(/\s+$/u, "");
+    }
+
+    function readFixed(bytes, table) {
+      return Array.from({ length: table.count }, (_, index) =>
+        trimRight(readText(bytes, table.offset + index * table.width, table.width)),
+      );
+    }
+
+    function readU16(bytes, offset) {
+      return bytes[offset] | (bytes[offset + 1] << 8);
+    }
+
+    function readU16Table(bytes, table) {
+      return Array.from({ length: table.count }, (_, index) => readU16(bytes, table.offset + index * 2));
+    }
+
+    function readBytes(bytes, table) {
+      return Array.from({ length: table.count }, (_, index) => bytes[table.offset + index]);
+    }
+
+    function readRefs(bytes) {
+      const table = OFFSETS.circuitDriverRefs;
+      return Array.from({ length: table.count }, (_, index) =>
+        Array.from(bytes.slice(table.offset + index * table.width, table.offset + (index + 1) * table.width)),
+      );
+    }
+
+    function readPoints(bytes) {
+      const values = readBytes(bytes, OFFSETS.points);
+      const end = values.indexOf(0);
+      return end < 0 ? values : values.slice(0, end);
+    }
+
+    function parseSeason(bytes) {
+      const names = readFixed(bytes, OFFSETS.circuits);
+      const laps = readBytes(bytes, OFFSETS.lapCounts);
+      const lengths = readU16Table(bytes, OFFSETS.trackLengthHundredths);
+      const lapRecords = readU16Table(bytes, OFFSETS.lapRecordTenths);
+      const raceRecords = readU16Table(bytes, OFFSETS.raceRecordTenths);
+      const years = readU16Table(bytes, OFFSETS.lapRecordYears);
+      const refs = readRefs(bytes);
+
+      return {
+        points: readPoints(bytes),
+        drivers: readFixed(bytes, OFFSETS.drivers),
+        driverSpecials: readFixed(bytes, OFFSETS.driverSpecials),
+        teams: readFixed(bytes, OFFSETS.teams),
+        managers: readFixed(bytes, OFFSETS.managers),
+        sponsors: readFixed(bytes, OFFSETS.sponsors),
+        incidents: readFixed(bytes, OFFSETS.incidents),
+        circuitGridText: readText(bytes, OFFSETS.circuitGridText.offset, OFFSETS.circuitGridText.length),
+        trackReportGridText: readText(bytes, OFFSETS.trackReportGridText.offset, OFFSETS.trackReportGridText.length),
+        circuits: names.map((name, index) => ({
+          name,
+          laps: laps[index],
+          trackLengthHundredths: lengths[index],
+          lapRecordTenths: lapRecords[index],
+          raceRecordTenths: raceRecords[index],
+          lapRecordYear: years[index],
+          driverRefs: refs[index],
+        })),
+      };
+    }
+
+    function renderSeason(season) {
+      els.points.value = season.points.join(", ");
+      els.drivers.value = season.drivers.join("\n");
+      els.driverSpecials.value = season.driverSpecials.join("\n");
+      els.teams.value = season.teams.join("\n");
+      els.managers.value = season.managers.join("\n");
+      els.sponsors.value = season.sponsors.join("\n");
+      els.incidents.value = season.incidents.join("\n");
+      els.circuitGridText.value = season.circuitGridText;
+      els.trackReportGridText.value = season.trackReportGridText;
+      els.circuits.value = season.circuits.map((circuit) => [
+        circuit.name,
+        circuit.laps,
+        circuit.trackLengthHundredths,
+        circuit.lapRecordTenths,
+        circuit.raceRecordTenths,
+        circuit.lapRecordYear,
+        circuit.driverRefs.join(","),
+      ].join("\t")).join("\n");
+    }
+
+    function lines(id) {
+      return els[id].value.split(/\r?\n/u).map((line) => line.trimEnd()).filter((line) => line.length);
+    }
+
+    function numbersFromText(text, label) {
+      const values = text.split(/[,\s]+/u).filter(Boolean).map((part) => Number(part));
+      values.forEach((value, index) => assertByte(value, `${label}[${index}]`));
+      return values;
+    }
+
+    function parseEditedSeason() {
+      return {
+        points: numbersFromText(els.points.value, "points"),
+        drivers: lines("drivers"),
+        driverSpecials: lines("driverSpecials"),
+        teams: lines("teams"),
+        managers: lines("managers"),
+        sponsors: lines("sponsors"),
+        incidents: lines("incidents"),
+        circuitGridText: els.circuitGridText.value,
+        trackReportGridText: els.trackReportGridText.value,
+        circuits: lines("circuits").map((line, index) => {
+          const columns = line.split("\t");
+          if (columns.length !== 7) {
+            throw new Error(`circuits line ${index + 1} must have 7 tab-separated columns`);
+          }
+          const refs = numbersFromText(columns[6], `circuits[${index}].driverRefs`);
+          if (refs.length !== 4) {
+            throw new Error(`circuits[${index}].driverRefs must have 4 values`);
+          }
+          return {
+            name: columns[0],
+            laps: Number(columns[1]),
+            trackLengthHundredths: Number(columns[2]),
+            lapRecordTenths: Number(columns[3]),
+            raceRecordTenths: Number(columns[4]),
+            lapRecordYear: Number(columns[5]),
+            driverRefs: refs,
+          };
+        }),
+      };
+    }
+
+    function assertAscii(text, label) {
+      if (!/^[\x20-\x7e]*$/u.test(String(text))) {
+        throw new Error(`${label} contains unsupported characters; use printable ASCII only`);
+      }
+    }
+
+    function assertByte(value, label) {
+      if (!Number.isInteger(value) || value < 0 || value > 255) {
+        throw new Error(`${label} must be an integer from 0 to 255`);
+      }
+    }
+
+    function assertU16(value, label) {
+      if (!Number.isInteger(value) || value < 0 || value > 65535) {
+        throw new Error(`${label} must be an integer from 0 to 65535`);
+      }
+    }
+
+    function writeText(bytes, offset, width, value, label) {
+      const text = String(value ?? "");
+      assertAscii(text, label);
+      if (text.length > width) {
+        throw new Error(`${label} exceeds ${width} characters`);
+      }
+      const padded = text.padEnd(width, " ");
+      for (let i = 0; i < width; i++) bytes[offset + i] = padded.charCodeAt(i);
+    }
+
+    function writeFixed(bytes, table, values, label) {
+      if (values.length > table.count) {
+        throw new Error(`${label} has ${values.length} entries, maximum is ${table.count}`);
+      }
+      values.forEach((value, index) => writeText(bytes, table.offset + index * table.width, table.width, value, `${label}[${index}]`));
+    }
+
+    function writeRaw(bytes, table, value, label) {
+      assertAscii(value, label);
+      if (value.length !== table.length) {
+        throw new Error(`${label} must be exactly ${table.length} characters`);
+      }
+      for (let i = 0; i < table.length; i++) bytes[table.offset + i] = value.charCodeAt(i);
+    }
+
+    function writeByte(bytes, offset, value, label) {
+      assertByte(value, label);
+      bytes[offset] = value;
+    }
+
+    function writeU16(bytes, offset, value, label) {
+      assertU16(value, label);
+      bytes[offset] = value & 255;
+      bytes[offset + 1] = value >> 8;
+    }
+
+    function indexOfSignature(bytes, signature) {
+      outer: for (let i = 0; i <= bytes.length - signature.length; i++) {
+        for (let j = 0; j < signature.length; j++) {
+          if (signature[j] !== null && bytes[i + j] !== signature[j]) continue outer;
+        }
+        return i;
+      }
+      return -1;
+    }
+
+    function writePoints(bytes, points) {
+      if (points.length < 1 || points.length > OFFSETS.points.count - 1) {
+        throw new Error(`points must have 1 to ${OFFSETS.points.count - 1} entries`);
+      }
+      points.forEach((point, index) => {
+        assertByte(point, `points[${index}]`);
+        if (point === 0) throw new Error("points entries must be non-zero");
+      });
+      for (let i = 0; i < OFFSETS.points.count; i++) {
+        bytes[OFFSETS.points.offset + i] = points[i] ?? 0;
+      }
+      const loopIndex = indexOfSignature(bytes, POINTS_LOOP_SIGNATURE);
+      if (loopIndex < 0) {
+        throw new Error("Could not find points-awarding loop signature");
+      }
+      bytes[loopIndex + 1] = points.length - 1;
+    }
+
+    function writeLapDisplay(bytes, laps) {
+      const text = laps.slice(0, 16).map((lap, index) => {
+        assertByte(lap, `circuits[${index}].laps`);
+        return String(lap).padStart(2, "0").slice(-2);
+      }).join("");
+      for (let i = 0; i < text.length; i++) bytes[OFFSETS.lapCountsDisplay.offset + i] = text.charCodeAt(i);
+    }
+
+    function applySeason(bytes, season) {
+      writePoints(bytes, season.points);
+      writeFixed(bytes, OFFSETS.drivers, season.drivers, "drivers");
+      writeFixed(bytes, OFFSETS.driverSpecials, season.driverSpecials, "driverSpecials");
+      writeFixed(bytes, OFFSETS.teams, season.teams, "teams");
+      writeFixed(bytes, OFFSETS.managers, season.managers, "managers");
+      writeFixed(bytes, OFFSETS.sponsors, season.sponsors, "sponsors");
+      writeFixed(bytes, OFFSETS.incidents, season.incidents, "incidents");
+      writeRaw(bytes, OFFSETS.circuitGridText, season.circuitGridText, "circuitGridText");
+      writeRaw(bytes, OFFSETS.trackReportGridText, season.trackReportGridText, "trackReportGridText");
+
+      if (season.circuits.length > OFFSETS.circuits.count) {
+        throw new Error(`circuits has ${season.circuits.length} entries, maximum is ${OFFSETS.circuits.count}`);
+      }
+      season.circuits.forEach((circuit, index) => {
+        writeText(bytes, OFFSETS.circuits.offset + index * OFFSETS.circuits.width, OFFSETS.circuits.width, circuit.name, `circuits[${index}].name`);
+        writeByte(bytes, OFFSETS.lapCounts.offset + index, circuit.laps, `circuits[${index}].laps`);
+        writeU16(bytes, OFFSETS.trackLengthHundredths.offset + index * 2, circuit.trackLengthHundredths, `circuits[${index}].trackLengthHundredths`);
+        writeU16(bytes, OFFSETS.lapRecordTenths.offset + index * 2, circuit.lapRecordTenths, `circuits[${index}].lapRecordTenths`);
+        writeU16(bytes, OFFSETS.raceRecordTenths.offset + index * 2, circuit.raceRecordTenths, `circuits[${index}].raceRecordTenths`);
+        writeU16(bytes, OFFSETS.lapRecordYears.offset + index * 2, circuit.lapRecordYear, `circuits[${index}].lapRecordYear`);
+        circuit.driverRefs.forEach((value, refIndex) => {
+          writeByte(bytes, OFFSETS.circuitDriverRefs.offset + index * OFFSETS.circuitDriverRefs.width + refIndex, value, `circuits[${index}].driverRefs[${refIndex}]`);
+        });
+      });
+      writeLapDisplay(bytes, season.circuits.map((circuit) => circuit.laps));
+    }
+
+    function download(name, blob) {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = name;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    els.file.addEventListener("change", async () => {
+      const file = els.file.files[0];
+      if (!file) return;
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      if (bytes.length !== SNA_SIZE) {
+        setStatus(`${file.name} is ${bytes.length} bytes; expected ${SNA_SIZE}.`, "error");
+        return;
+      }
+      sourceBytes = bytes;
+      sourceName = file.name;
+      renderSeason(parseSeason(bytes));
+      els.downloadJson.disabled = false;
+      els.downloadSna.disabled = false;
+      setStatus(`Loaded ${file.name}.`, "ok");
+    });
+
+    els.downloadJson.addEventListener("click", () => {
+      try {
+        const season = parseEditedSeason();
+        download(sourceName.replace(/\.sna$/iu, ".json"), new Blob([JSON.stringify(season, null, 2) + "\n"], { type: "application/json" }));
+        setStatus("JSON exported.", "ok");
+      } catch (error) {
+        setStatus(error.message, "error");
+      }
+    });
+
+    els.downloadSna.addEventListener("click", () => {
+      try {
+        const edited = new Uint8Array(sourceBytes);
+        applySeason(edited, parseEditedSeason());
+        download(sourceName.replace(/\.sna$/iu, "-patched.sna"), new Blob([edited], { type: "application/octet-stream" }));
+        setStatus("Patched SNA exported.", "ok");
+      } catch (error) {
+        setStatus(error.message, "error");
+      }
+    });
+  </script>
+</body>
+</html>
