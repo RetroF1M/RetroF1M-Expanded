@@ -152,3 +152,29 @@ Definition of done:
 The key principle is to keep every experiment producing a playable `.sna`.
 If a patch cannot boot and reach the original game flow, it should not be
 merged back toward the safe build.
+
+## Experimental Calendar Patch Status
+
+This branch now has a concrete 20-round calendar patcher:
+
+```sh
+node tools/f1-boundary-patch.mjs build seasons/f12023-modern.sna tools/seasons/f12023-boundary-20.json seasons/f12023-boundary-experimental.sna
+```
+
+The patcher relocates the circuit data tables from the tightly packed
+`0x6AD5-0x71C4` area into `0x613C-0x64E7`, then patches the direct Z80 table
+references and final-round checks. It deliberately leaves the default safe
+emulator route pointed at `f12023-modern.sna`.
+
+This is the first boundary build, not the promotion target. It proves the
+patch path for more than sixteen circuit slots; the remaining promotion work
+is runtime testing of race 17, a paged calendar display, and then the separate
+race-grid expansion.
+
+## Race Grid Patch Status
+
+The race-grid side is mapped in `docs/race-grid-engine-map.md`. The engine has
+twelve-entry active arrays, but the player/team prompts, visible timing board,
+and several race-flow loops still have six-car assumptions. No grid patch is
+applied to the experimental snapshot yet because a constant-only edit would
+likely make an untestable race-screen regression.

@@ -39,3 +39,26 @@ These tools preserve the original snapshot structure. They do not relocate
 tables or rewrite the race UI. More than sixteen calendar rounds and a
 larger live race grid require deeper engine work, not just data-table
 editing.
+
+## `z80-inspect.mjs`
+
+Small local inspector for targeted Z80 work:
+
+```sh
+node tools/z80-inspect.mjs disasm <snapshot.sna> <start> <end>
+node tools/z80-inspect.mjs refs <snapshot.sna> name=addr [name=addr...]
+```
+
+Addresses are RAM addresses, for example `0xC7D0`.
+
+## `f1-boundary-patch.mjs`
+
+Experimental patcher for this branch. It relocates the circuit tables into a
+free RAM window and builds a separate 20-round calendar snapshot:
+
+```sh
+node tools/f1-boundary-patch.mjs build seasons/f12023-modern.sna tools/seasons/f12023-boundary-20.json seasons/f12023-boundary-experimental.sna
+node tools/f1-boundary-patch.mjs verify seasons/f12023-boundary-experimental.sna 20
+```
+
+This does not modify the safe build or the default emulator route.

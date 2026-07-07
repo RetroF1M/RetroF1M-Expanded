@@ -92,3 +92,25 @@ and byte-sized championship totals. Expanding the live race grid, moving
 beyond sixteen in-season circuits, or making championship totals fully
 16-bit requires deeper Z80 code changes across race flow, standings, and
 screen layout.
+
+## Experimental Boundary Build
+
+On the `boundary-grid-calendar-z80` branch, the safe build remains available
+as `seasons/f12023-modern.sna`. The experimental 20-round calendar build is:
+
+```text
+seasons/f12023-boundary-experimental.sna
+```
+
+Build and verify it with:
+
+```sh
+node tools/f1-boundary-patch.mjs build seasons/f12023-modern.sna tools/seasons/f12023-boundary-20.json seasons/f12023-boundary-experimental.sna
+node tools/f1-boundary-patch.mjs verify seasons/f12023-boundary-experimental.sna 20
+```
+
+Then load it locally with:
+
+```text
+http://127.0.0.1:8000/emulator.html#/seasons/f12023-boundary-experimental.sna
+```
