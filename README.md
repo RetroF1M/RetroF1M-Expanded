@@ -114,3 +114,9 @@ Then load it locally with:
 ```text
 http://127.0.0.1:8000/emulator.html#/seasons/f12023-boundary-experimental.sna
 ```
+
+## Long-Term Roadmap
+
+The detailed handoff plan for the 1950-2026 season archive, customizer,
+calendar expansion, points engine, and race-grid expansion is in
+`docs/project-roadmap-1950-2026.md`.
