@@ -54,11 +54,12 @@ Addresses are RAM addresses, for example `0xC7D0`.
 ## `f1-boundary-patch.mjs`
 
 Experimental patcher for this branch. It relocates the circuit tables into a
-free RAM window and builds a separate 20-round calendar snapshot:
+free RAM window, adds a byte-saturating points guard, and builds a separate
+22-round calendar snapshot:
 
 ```sh
-node tools/f1-boundary-patch.mjs build seasons/f12023-modern.sna tools/seasons/f12023-boundary-20.json seasons/f12023-boundary-experimental.sna
-node tools/f1-boundary-patch.mjs verify seasons/f12023-boundary-experimental.sna 20
+node tools/f1-boundary-patch.mjs build seasons/f12023-modern.sna tools/seasons/f12023-boundary-22.json seasons/f12023-boundary-experimental.sna
+node tools/f1-boundary-patch.mjs verify seasons/f12023-boundary-experimental.sna 22
 ```
 
 This does not modify the safe build or the default emulator route.

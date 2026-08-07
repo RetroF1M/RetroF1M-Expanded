@@ -155,21 +155,23 @@ merged back toward the safe build.
 
 ## Experimental Calendar Patch Status
 
-This branch now has a concrete 20-round calendar patcher:
+This branch now has a concrete 22-round calendar patcher:
 
 ```sh
-node tools/f1-boundary-patch.mjs build seasons/f12023-modern.sna tools/seasons/f12023-boundary-20.json seasons/f12023-boundary-experimental.sna
+node tools/f1-boundary-patch.mjs build seasons/f12023-modern.sna tools/seasons/f12023-boundary-22.json seasons/f12023-boundary-experimental.sna
 ```
 
 The patcher relocates the circuit data tables from the tightly packed
-`0x6AD5-0x71C4` area into `0x613C-0x64E7`, then patches the direct Z80 table
-references and final-round checks. It deliberately leaves the default safe
-emulator route pointed at `f12023-modern.sna`.
+`0x6AD5-0x71C4` area into `0x613C-0x655F`, then patches the direct Z80 table
+references and final-round checks. It also redirects the two championship
+points additions through a saturating-add trampoline so byte totals cap at
+`255` instead of wrapping. It deliberately leaves the default safe emulator
+route pointed at `f12023-modern.sna`.
 
 This is the first boundary build, not the promotion target. It proves the
 patch path for more than sixteen circuit slots; the remaining promotion work
-is runtime testing of race 17, a paged calendar display, and then the separate
-race-grid expansion.
+is runtime testing of race 17+, a cleaner paged calendar display if the
+current 22-row list is too dense, and then the separate race-grid expansion.
 
 ## Race Grid Patch Status
 

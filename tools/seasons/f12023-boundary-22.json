@@ -1,0 +1,77 @@
+{
+  "format": "RetroF1M boundary circuit extension v1",
+  "calendarCount": 22,
+  "notes": [
+    "Experimental engine patch data for tools/f1-boundary-patch.mjs.",
+    "The first sixteen rounds are copied from f12023-modern.sna. These six entries are appended in relocated Z80 tables.",
+    "refColumns are the engine's four column-major circuit reference bytes: lap-record holder driver, holder team, previous winner driver, previous winner team."
+  ],
+  "extraCircuits": [
+    {
+      "name": "Baku",
+      "shortName": "Baku",
+      "reportName": "Baku",
+      "laps": 51,
+      "lapRecordTenths": 1030,
+      "raceRecordTenths": 1030,
+      "trackLengthHundredths": 373,
+      "lapRecordYear": 2019,
+      "refColumns": [3, 3, 6, 3]
+    },
+    {
+      "name": "Barcelona",
+      "shortName": "Spain",
+      "reportName": "Spain",
+      "laps": 66,
+      "lapRecordTenths": 763,
+      "raceRecordTenths": 763,
+      "trackLengthHundredths": 289,
+      "lapRecordYear": 2023,
+      "refColumns": [1, 3, 1, 3]
+    },
+    {
+      "name": "Spielberg",
+      "shortName": "Austria",
+      "reportName": "Austria",
+      "laps": 71,
+      "lapRecordTenths": 656,
+      "raceRecordTenths": 656,
+      "trackLengthHundredths": 268,
+      "lapRecordYear": 2020,
+      "refColumns": [4, 2, 1, 3]
+    },
+    {
+      "name": "Hungaroring",
+      "shortName": "Hungary",
+      "reportName": "Hungary",
+      "laps": 70,
+      "lapRecordTenths": 766,
+      "raceRecordTenths": 766,
+      "trackLengthHundredths": 272,
+      "lapRecordYear": 2020,
+      "refColumns": [2, 1, 1, 3]
+    },
+    {
+      "name": "Singapore",
+      "shortName": "Singapor",
+      "reportName": "Singapor",
+      "laps": 62,
+      "lapRecordTenths": 959,
+      "raceRecordTenths": 959,
+      "trackLengthHundredths": 307,
+      "lapRecordYear": 2023,
+      "refColumns": [2, 1, 4, 2]
+    },
+    {
+      "name": "Austin",
+      "shortName": "Austin",
+      "reportName": "Austin",
+      "laps": 56,
+      "lapRecordTenths": 962,
+      "raceRecordTenths": 962,
+      "trackLengthHundredths": 343,
+      "lapRecordYear": 2019,
+      "refColumns": [3, 2, 1, 3]
+    }
+  ]
+}

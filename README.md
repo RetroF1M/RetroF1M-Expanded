@@ -96,7 +96,7 @@ screen layout.
 ## Experimental Boundary Build
 
 On the `boundary-grid-calendar-z80` branch, the safe build remains available
-as `seasons/f12023-modern.sna`. The experimental 20-round calendar build is:
+as `seasons/f12023-modern.sna`. The experimental 22-round calendar build is:
 
 ```text
 seasons/f12023-boundary-experimental.sna
@@ -105,8 +105,8 @@ seasons/f12023-boundary-experimental.sna
 Build and verify it with:
 
 ```sh
-node tools/f1-boundary-patch.mjs build seasons/f12023-modern.sna tools/seasons/f12023-boundary-20.json seasons/f12023-boundary-experimental.sna
-node tools/f1-boundary-patch.mjs verify seasons/f12023-boundary-experimental.sna 20
+node tools/f1-boundary-patch.mjs build seasons/f12023-modern.sna tools/seasons/f12023-boundary-22.json seasons/f12023-boundary-experimental.sna
+node tools/f1-boundary-patch.mjs verify seasons/f12023-boundary-experimental.sna 22
 ```
 
 Then load it locally with:

@@ -20,17 +20,18 @@ const SOURCE = {
 };
 
 const EXPANDED = {
-  maxCalendarCount: 20,
+  maxCalendarCount: 22,
   lapCounts: 0x613c,
-  lapRecordTenths: 0x6150,
-  raceRecordTenths: 0x6178,
-  refColumns: [0x61a0, 0x61b4, 0x61c8, 0x61dc],
-  trackLengthHundredths: 0x61f0,
-  lapRecordYears: 0x6218,
-  fullNames: 0x6240,
-  shortGrid: 0x63a8,
-  reportGrid: 0x6448,
-  end: 0x64e8,
+  lapRecordTenths: 0x6152,
+  raceRecordTenths: 0x617e,
+  refColumns: [0x61aa, 0x61c0, 0x61d6, 0x61ec],
+  trackLengthHundredths: 0x6202,
+  lapRecordYears: 0x622e,
+  fullNames: 0x625a,
+  shortGrid: 0x63e6,
+  reportGrid: 0x6496,
+  pointsSaturatingAdd: 0x6550,
+  end: 0x6560,
 };
 
 const WORD_PATCHES = [
@@ -54,6 +55,28 @@ const BYTE_PATCHES = [
   { label: "post-race final-round check", addr: 0xea3b, old: 0x10 },
   { label: "lap-record reset loop count", addr: 0xbf3a, old: 0x10 },
   { label: "short-name redraw loop count", addr: 0xe93a, old: 0x10 },
+  { label: "short-name redraw row base", addr: 0xe947, old: 0x14 },
+];
+
+const CODE_PATCHES = [
+  {
+    label: "driver points saturating add call",
+    addr: 0xce7b,
+    old: [0x7e, 0x81, 0x77],
+    next: [0xcd, EXPANDED.pointsSaturatingAdd & 0xff, EXPANDED.pointsSaturatingAdd >> 8],
+  },
+  {
+    label: "constructor points saturating add call",
+    addr: 0xce93,
+    old: [0x7e, 0x81, 0x77],
+    next: [0xcd, EXPANDED.pointsSaturatingAdd & 0xff, EXPANDED.pointsSaturatingAdd >> 8],
+  },
+  {
+    label: "points saturating add trampoline",
+    addr: EXPANDED.pointsSaturatingAdd,
+    old: [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+    next: [0x7e, 0x81, 0x30, 0x02, 0x3e, 0xff, 0x77, 0xc9],
+  },
 ];
 
 function hex(value, width = 4) {
@@ -163,6 +186,23 @@ function patchByte(buffer, ram, oldValue, nextValue, label) {
   buffer[offset] = nextValue;
 }
 
+function patchCode(buffer, ram, oldBytes, nextBytes, label) {
+  if (oldBytes.length !== nextBytes.length) {
+    throw new Error(`${label} old/new byte arrays must be the same length`);
+  }
+  const offset = fileOffsetForRam(ram);
+  oldBytes.forEach((expected, index) => {
+    const actual = buffer[offset + index];
+    if (actual !== expected) {
+      throw new Error(`${label} at ${hex(ram + index)} expected ${hex(expected, 2)}, found ${hex(actual, 2)}`);
+    }
+  });
+  nextBytes.forEach((value, index) => {
+    assertByte(value, `${label}[${index}]`);
+    buffer[offset + index] = value;
+  });
+}
+
 function assertWritableWindow(buffer) {
   const start = fileOffsetForRam(EXPANDED.lapCounts);
   const end = fileOffsetForRam(EXPANDED.end);
@@ -268,6 +308,9 @@ function applyExpandedData(buffer, data) {
   for (const patch of BYTE_PATCHES) {
     patchByte(buffer, patch.addr, patch.old, data.calendarCount, patch.label);
   }
+  for (const patch of CODE_PATCHES) {
+    patchCode(buffer, patch.addr, patch.old, patch.next, patch.label);
+  }
 }
 
 function verifyPatchedSnapshot(buffer, calendarCount) {
@@ -285,6 +328,15 @@ function verifyPatchedSnapshot(buffer, calendarCount) {
       throw new Error(`${patch.label} at ${hex(patch.addr)} is ${hex(actual, 2)}, expected ${hex(calendarCount, 2)}`);
     }
   }
+  for (const patch of CODE_PATCHES) {
+    const offset = fileOffsetForRam(patch.addr);
+    patch.next.forEach((expected, index) => {
+      const actual = buffer[offset + index];
+      if (actual !== expected) {
+        throw new Error(`${patch.label} at ${hex(patch.addr + index)} is ${hex(actual, 2)}, expected ${hex(expected, 2)}`);
+      }
+    });
+  }
 }
 
 async function buildCommand(input, extensionFile, output) {
@@ -297,7 +349,7 @@ async function buildCommand(input, extensionFile, output) {
   verifyPatchedSnapshot(buffer, data.calendarCount);
   await writeFile(output, buffer);
   console.log(`Built ${output} with ${data.calendarCount} relocated calendar slots`);
-  console.log(`Expanded tables: ${hex(EXPANDED.lapCounts)}-${hex(EXPANDED.end - 1)}; stack starts at 0x67B2 in the baseline SNA`);
+  console.log(`Expanded tables/code: ${hex(EXPANDED.lapCounts)}-${hex(EXPANDED.end - 1)}; stack starts at 0x67B2 in the baseline SNA`);
 }
 
 async function verifyCommand(file, expectedCount) {
@@ -314,7 +366,7 @@ function usage() {
   node tools/${script} verify <snapshot.sna> <calendarCount>
 
 Example:
-  node tools/${script} build seasons/f12023-modern.sna tools/seasons/f12023-boundary-20.json seasons/f12023-boundary-experimental.sna`);
+  node tools/${script} build seasons/f12023-modern.sna tools/seasons/f12023-boundary-22.json seasons/f12023-boundary-experimental.sna`);
 }
 
 async function main() {
