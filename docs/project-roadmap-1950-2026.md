@@ -17,6 +17,98 @@ Preserve:
 - QAOP emulator delivery
 - `.sna` files as the playable season artifacts
 
+## Original Project Brief
+
+Repository:
+
+- `https://github.com/RetroF1M/RetroF1M.github.io/tree/main`
+
+Project context:
+
+- RetroF1M hosts modified ZX Spectrum `.sna` snapshots of the 1985 game
+  Formula One using the QAOP JavaScript ZX Spectrum emulator.
+- Season mods are already made by editing `.sna` files.
+- The target deliverable is a working modified game package, not an
+  open-ended reverse-engineering research project.
+- Use `seasons/f12023.sna` as the main baseline because it is the most
+  up-to-date snapshot.
+
+Original requested deliverables:
+
+- A working modified `.sna` game that still plays like the original Formula
+  One.
+- Optional arrow-key controls for pit stops.
+- More cars/teams available in races so the grid can be filled properly.
+- More circuits available so a season can include every real race from that
+  year.
+- Correct points system for the selected season.
+- Editing tools or scripts that make it easy to keep making season files from
+  1950 onward.
+
+Hard boundaries:
+
+- Do not build a new JavaScript remake.
+- Do not replace the game with a dashboard, simulator, or new browser game.
+- Do not turn this into a research-only task.
+- Do not spend time on speculative labs unless they directly produce the
+  working modified `.sna` or editing workflow.
+- Preserve the original ZX Spectrum game, menus, race flow, graphics, pit
+  stops, and feel.
+- Keep the QAOP emulator approach.
+
+Pit-stop key remap requirement:
+
+- Add it in the emulator wrapper if possible.
+- It must be off by default and toggleable.
+- It must not break menu navigation.
+- It must not interfere when typing names, numbers, save names, or text.
+- Mapping:
+
+```text
+Left arrow  -> Q
+Down arrow  -> Z
+Up arrow    -> I
+Right arrow -> P
+Enter       -> N
+```
+
+Game modification goals:
+
+- Expand the usable race grid beyond the original small team/car limit.
+- Expand the season calendar beyond the original circuit limit.
+- Allow the points system to be changed per season, including modern top-10
+  systems like `25,18,15,12,10,8,6,4,2,1`.
+- Keep the result as a playable `.sna` in QAOP.
+
+Editing workflow goals:
+
+- Provide a practical way to generate or edit season `.sna` files.
+- Support producing many F1 seasons, ideally every season from 1950 onward.
+- Cover:
+  - driver names
+  - team names
+  - managers/principals
+  - circuits
+  - lap counts
+  - track lengths
+  - lap records
+  - previous winners
+  - sponsors
+  - failure/incident text
+  - points system
+  - car/team graphics if feasible
+- Prefer scripts or a simple web editor that writes valid `.sna` files.
+- The editor is a support tool; the main deliverable remains the working
+  modified game.
+
+Expected package outputs:
+
+- A patched playable `.sna` based on `f12023.sna`.
+- Updated emulator page with the safe toggleable pit-stop remap.
+- Repeatable editing workflow for future season files.
+- Clear testing instructions.
+- Notes only where needed to explain how to continue editing safely.
+
 ## Branch State
 
 | Branch | Commit | Purpose |
