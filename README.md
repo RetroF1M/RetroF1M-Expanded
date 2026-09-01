@@ -137,6 +137,11 @@ node tools/f1-canonical-season.mjs compile seasons/f12023-modern.sna tools/seaso
 The compiler validates profile capacity, data widths, circuit references, and
 points before invoking the existing safe or boundary snapshot builders.
 
+The browser editor can also preview a canonical JSON package and validates its
+declared engine profile. It intentionally directs 17-22 round packages to the
+CLI compiler, so the browser cannot accidentally export a fixed 16-round
+snapshot as a longer season.
+
 ## Long-Term Roadmap
 
 The detailed handoff plan for the 1950-2026 season archive, customizer,

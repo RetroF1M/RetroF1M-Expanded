@@ -388,6 +388,9 @@ Initial implementation delivered:
 - `tools/seasons/f12023-canonical.json` converts the current 2023 data into
   this format and round-trips byte-for-byte to the experimental 22-round
   snapshot when compiled from the modern baseline.
+- `editor/season-editor.html` accepts canonical JSON for profile validation
+  and fixed-table preview, while deliberately requiring the CLI compiler for
+  17-22-round `.sna` output.
 
 ## Customizer Requirements
 

@@ -185,6 +185,8 @@
     <div class="toolbar">
       <label class="file-label" for="file">Load .sna</label>
       <input id="file" type="file" accept=".sna">
+      <label class="file-label" for="canonicalFile">Preview canonical JSON</label>
+      <input id="canonicalFile" type="file" accept=".json,application/json">
       <button id="downloadJson" type="button" disabled>Download JSON</button>
       <button id="downloadSna" class="primary" type="button" disabled>Download patched .sna</button>
     </div>
@@ -267,6 +269,7 @@
 
     const els = {
       file: document.getElementById("file"),
+      canonicalFile: document.getElementById("canonicalFile"),
       status: document.getElementById("status"),
       downloadJson: document.getElementById("downloadJson"),
       downloadSna: document.getElementById("downloadSna"),
@@ -284,6 +287,46 @@
 
     let sourceBytes = null;
     let sourceName = "season.sna";
+
+    function canonicalPreview(canonical) {
+      const profiles = { "safe-16": 16, "experimental-calendar-22": 22 };
+      if (canonical?.format !== "RetroF1M canonical season v1") {
+        throw new Error("Not a RetroF1M canonical season v1 file");
+      }
+      const profile = canonical.engineProfile?.id;
+      if (!profiles[profile]) throw new Error("Unknown canonical engine profile");
+      if (!Array.isArray(canonical.calendar) || canonical.calendar.length < 1 || canonical.calendar.length > profiles[profile]) {
+        throw new Error(`${profile} supports 1-${profiles[profile]} rounds`);
+      }
+      if (!Array.isArray(canonical.pointsSystem?.awards) || canonical.pointsSystem.awards.length < 1 || canonical.pointsSystem.awards.length > 15) {
+        throw new Error("Canonical pointsSystem.awards must have 1-15 entries");
+      }
+      const rounds = canonical.calendar.slice(0, 16).map((round, index) => ({
+        name: round.circuitName ?? round.raceName,
+        laps: round.laps,
+        trackLengthHundredths: round.trackLengthHundredths,
+        lapRecordTenths: round.lapRecordTenths,
+        raceRecordTenths: round.raceRecordTenths ?? round.lapRecordTenths,
+        lapRecordYear: round.lapRecordYear,
+        driverRefs: round.references ?? round.driverRefs,
+      }));
+      return {
+        profile,
+        roundCount: canonical.calendar.length,
+        season: {
+          points: canonical.pointsSystem.awards,
+          drivers: (canonical.drivers ?? []).map((driver) => typeof driver === "string" ? driver : driver.name),
+          driverSpecials: canonical.driverSpecials ?? [],
+          teams: (canonical.teams ?? []).map((team) => typeof team === "string" ? team : team.displayName ?? team.constructor),
+          managers: canonical.managers ?? [],
+          sponsors: canonical.text?.sponsors ?? [],
+          incidents: canonical.text?.incidents ?? [],
+          circuitGridText: canonical.text?.circuitGridText ?? " ".repeat(127),
+          trackReportGridText: canonical.text?.trackReportGridText ?? " ".repeat(127),
+          circuits: rounds,
+        },
+      };
+    }
 
     function setStatus(message, type = "") {
       els.status.textContent = message;
@@ -571,6 +614,21 @@
       els.downloadJson.disabled = false;
       els.downloadSna.disabled = false;
       setStatus(`Loaded ${file.name}.`, "ok");
+    });
+
+    els.canonicalFile.addEventListener("change", async () => {
+      const file = els.canonicalFile.files[0];
+      if (!file) return;
+      try {
+        const preview = canonicalPreview(JSON.parse(await file.text()));
+        renderSeason(preview.season);
+        sourceBytes = null;
+        els.downloadJson.disabled = true;
+        els.downloadSna.disabled = true;
+        setStatus(`Previewing ${file.name}: ${preview.roundCount} rounds, ${preview.profile}. Use the canonical CLI compiler to export its .sna.`, "ok");
+      } catch (error) {
+        setStatus(error.message, "error");
+      }
     });
 
     els.downloadJson.addEventListener("click", () => {
