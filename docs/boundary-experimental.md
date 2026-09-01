@@ -49,3 +49,14 @@ season engine. The next Z80 work is still needed before promoting it:
   display if exact 300+ point totals are required.
 - Expand the live race grid separately; the timing board and race state arrays
   are not patched in this build.
+
+## Controlled Round-17 Proof
+
+`tools/f1-boundary-runtime-probe.mjs` provides a repeatable controlled snapshot
+state for the critical transition. It sets the game current-round byte
+(`0x6BB2`) to 16 in a separately named probe snapshot, then verifies the
+patched `0xC7BA` setup path: the `0x16` count check increments it to 17 and the
+relocated tables yield Baku, 51 laps, a 103.0-second lap record, and a 3.73-mile
+track length. This proves the race-17 setup inputs without modifying the normal
+experimental snapshot. Full completion/end-of-season flow remains a separate
+manual QAOP test.

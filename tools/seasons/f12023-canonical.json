@@ -1,0 +1,723 @@
+{
+  "format": "RetroF1M canonical season v1",
+  "year": 2023,
+  "engineProfile": {
+    "id": "experimental-calendar-22"
+  },
+  "pointsSystem": {
+    "awards": [
+      25,
+      18,
+      15,
+      12,
+      10,
+      8,
+      6,
+      4,
+      2,
+      1
+    ],
+    "fastestLapRule": null,
+    "droppedScores": null
+  },
+  "calendar": [
+    {
+      "round": 1,
+      "raceName": "Sakhir",
+      "circuitName": "Sakhir",
+      "shortName": "Sakhir",
+      "reportName": "Sakhir",
+      "laps": 57,
+      "trackLengthHundredths": 363,
+      "lapRecordTenths": 935,
+      "raceRecordTenths": 945,
+      "lapRecordYear": 2022,
+      "references": [
+        3,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "round": 2,
+      "raceName": "Jeddah",
+      "circuitName": "Jeddah",
+      "shortName": "Jeddah",
+      "reportName": "Jeddah",
+      "laps": 50,
+      "trackLengthHundredths": 384,
+      "lapRecordTenths": 906,
+      "raceRecordTenths": 916,
+      "lapRecordYear": 2022,
+      "references": [
+        10,
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "round": 3,
+      "raceName": "Melbourne",
+      "circuitName": "Melbourne",
+      "shortName": "Melbourne",
+      "reportName": "Melbourne",
+      "laps": 58,
+      "trackLengthHundredths": 328,
+      "lapRecordTenths": 792,
+      "raceRecordTenths": 802,
+      "lapRecordYear": 2022,
+      "references": [
+        1,
+        1,
+        1,
+        2
+      ]
+    },
+    {
+      "round": 4,
+      "raceName": "Miami Autodrome",
+      "circuitName": "Miami Autodrome",
+      "shortName": "Miami Autodrome",
+      "reportName": "Miami Autodrome",
+      "laps": 57,
+      "trackLengthHundredths": 336,
+      "lapRecordTenths": 903,
+      "raceRecordTenths": 913,
+      "lapRecordYear": 2022,
+      "references": [
+        7,
+        7,
+        26,
+        10
+      ]
+    },
+    {
+      "round": 5,
+      "raceName": "Circuit de Monaco",
+      "circuitName": "Circuit de Monaco",
+      "shortName": "Circuit de Monaco",
+      "reportName": "Circuit de Monaco",
+      "laps": 78,
+      "trackLengthHundredths": 207,
+      "lapRecordTenths": 736,
+      "raceRecordTenths": 746,
+      "lapRecordYear": 2022,
+      "references": [
+        2,
+        2,
+        2,
+        3
+      ]
+    },
+    {
+      "round": 6,
+      "raceName": "Gilles Villeneuve",
+      "circuitName": "Gilles Villeneuve",
+      "shortName": "Gilles Villeneuve",
+      "reportName": "Gilles Villeneuve",
+      "laps": 70,
+      "trackLengthHundredths": 271,
+      "lapRecordTenths": 747,
+      "raceRecordTenths": 757,
+      "lapRecordYear": 2022,
+      "references": [
+        4,
+        2,
+        1,
+        3
+      ]
+    },
+    {
+      "round": 7,
+      "raceName": "Silverstone",
+      "circuitName": "Silverstone",
+      "shortName": "Silverstone",
+      "reportName": "Silverstone",
+      "laps": 52,
+      "trackLengthHundredths": 366,
+      "lapRecordTenths": 895,
+      "raceRecordTenths": 905,
+      "lapRecordYear": 2022,
+      "references": [
+        3,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "round": 8,
+      "raceName": "Spa-Francochamps",
+      "circuitName": "Spa-Francochamps",
+      "shortName": "Spa-Francochamps",
+      "reportName": "Spa-Francochamps",
+      "laps": 44,
+      "trackLengthHundredths": 435,
+      "lapRecordTenths": 1083,
+      "raceRecordTenths": 1093,
+      "lapRecordYear": 2022,
+      "references": [
+        1,
+        1,
+        3,
+        4
+      ]
+    },
+    {
+      "round": 9,
+      "raceName": "Zandvoort",
+      "circuitName": "Zandvoort",
+      "shortName": "Zandvoort",
+      "reportName": "Zandvoort",
+      "laps": 72,
+      "trackLengthHundredths": 265,
+      "lapRecordTenths": 726,
+      "raceRecordTenths": 736,
+      "lapRecordYear": 2022,
+      "references": [
+        3,
+        1,
+        3,
+        1
+      ]
+    },
+    {
+      "round": 10,
+      "raceName": "Monza",
+      "circuitName": "Monza",
+      "shortName": "Monza",
+      "reportName": "Monza",
+      "laps": 53,
+      "trackLengthHundredths": 360,
+      "lapRecordTenths": 830,
+      "raceRecordTenths": 840,
+      "lapRecordYear": 2022,
+      "references": [
+        6,
+        1,
+        4,
+        1
+      ]
+    },
+    {
+      "round": 11,
+      "raceName": "Suzuka",
+      "circuitName": "Suzuka",
+      "shortName": "Suzuka",
+      "reportName": "Suzuka",
+      "laps": 53,
+      "trackLengthHundredths": 361,
+      "lapRecordTenths": 883,
+      "raceRecordTenths": 893,
+      "lapRecordYear": 2022,
+      "references": [
+        1,
+        1,
+        1,
+        26
+      ]
+    },
+    {
+      "round": 12,
+      "raceName": "Lusail Circuit",
+      "circuitName": "Lusail Circuit",
+      "shortName": "Lusail Circuit",
+      "reportName": "Lusail Circuit",
+      "laps": 57,
+      "trackLengthHundredths": 337,
+      "lapRecordTenths": 798,
+      "raceRecordTenths": 808,
+      "lapRecordYear": 2021,
+      "references": [
+        1,
+        7,
+        26,
+        1
+      ]
+    },
+    {
+      "round": 13,
+      "raceName": "Mexico City",
+      "circuitName": "Mexico City",
+      "shortName": "Mexico City",
+      "reportName": "Mexico City",
+      "laps": 71,
+      "trackLengthHundredths": 267,
+      "lapRecordTenths": 791,
+      "raceRecordTenths": 801,
+      "lapRecordYear": 2022,
+      "references": [
+        2,
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "round": 14,
+      "raceName": "Interlagos",
+      "circuitName": "Interlagos",
+      "shortName": "Interlagos",
+      "reportName": "Interlagos",
+      "laps": 71,
+      "trackLengthHundredths": 268,
+      "lapRecordTenths": 727,
+      "raceRecordTenths": 737,
+      "lapRecordYear": 2022,
+      "references": [
+        3,
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "round": 15,
+      "raceName": "Las Vegas",
+      "circuitName": "Las Vegas",
+      "shortName": "Las Vegas",
+      "reportName": "Las Vegas",
+      "laps": 50,
+      "trackLengthHundredths": 380,
+      "lapRecordTenths": 900,
+      "raceRecordTenths": 910,
+      "lapRecordYear": 2022,
+      "references": [
+        3,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "round": 16,
+      "raceName": "Yas Marina",
+      "circuitName": "Yas Marina",
+      "shortName": "Yas Marina",
+      "reportName": "Yas Marina",
+      "laps": 58,
+      "trackLengthHundredths": 328,
+      "lapRecordTenths": 873,
+      "raceRecordTenths": 883,
+      "lapRecordYear": 2022,
+      "references": [
+        3,
+        1,
+        1,
+        3
+      ]
+    },
+    {
+      "round": 17,
+      "raceName": "Baku",
+      "circuitName": "Baku",
+      "shortName": "Baku",
+      "reportName": "Baku",
+      "laps": 51,
+      "trackLengthHundredths": 373,
+      "lapRecordTenths": 1030,
+      "raceRecordTenths": 1030,
+      "lapRecordYear": 2019,
+      "references": [
+        3,
+        3,
+        6,
+        3
+      ]
+    },
+    {
+      "round": 18,
+      "raceName": "Barcelona",
+      "circuitName": "Barcelona",
+      "shortName": "Spain",
+      "reportName": "Spain",
+      "laps": 66,
+      "trackLengthHundredths": 289,
+      "lapRecordTenths": 763,
+      "raceRecordTenths": 763,
+      "lapRecordYear": 2023,
+      "references": [
+        1,
+        3,
+        1,
+        3
+      ]
+    },
+    {
+      "round": 19,
+      "raceName": "Spielberg",
+      "circuitName": "Spielberg",
+      "shortName": "Austria",
+      "reportName": "Austria",
+      "laps": 71,
+      "trackLengthHundredths": 268,
+      "lapRecordTenths": 656,
+      "raceRecordTenths": 656,
+      "lapRecordYear": 2020,
+      "references": [
+        4,
+        2,
+        1,
+        3
+      ]
+    },
+    {
+      "round": 20,
+      "raceName": "Hungaroring",
+      "circuitName": "Hungaroring",
+      "shortName": "Hungary",
+      "reportName": "Hungary",
+      "laps": 70,
+      "trackLengthHundredths": 272,
+      "lapRecordTenths": 766,
+      "raceRecordTenths": 766,
+      "lapRecordYear": 2020,
+      "references": [
+        2,
+        1,
+        1,
+        3
+      ]
+    },
+    {
+      "round": 21,
+      "raceName": "Singapore",
+      "circuitName": "Singapore",
+      "shortName": "Singapor",
+      "reportName": "Singapor",
+      "laps": 62,
+      "trackLengthHundredths": 307,
+      "lapRecordTenths": 959,
+      "raceRecordTenths": 959,
+      "lapRecordYear": 2023,
+      "references": [
+        2,
+        1,
+        4,
+        2
+      ]
+    },
+    {
+      "round": 22,
+      "raceName": "Austin",
+      "circuitName": "Austin",
+      "shortName": "Austin",
+      "reportName": "Austin",
+      "laps": 56,
+      "trackLengthHundredths": 343,
+      "lapRecordTenths": 962,
+      "raceRecordTenths": 962,
+      "lapRecordYear": 2019,
+      "references": [
+        3,
+        2,
+        1,
+        3
+      ]
+    }
+  ],
+  "drivers": [
+    {
+      "name": "Verstappen",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Hamilton",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Leclerc",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Sainz",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Alonso",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Perez",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Russell",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Ocon",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Gasly",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Norris",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Albon",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Piastri",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Bottas",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Zhou",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Stroll",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Tsunoda",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Magnussen",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Hulkenberg",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Sargeant",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "De Vries",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Ricciardo",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Schumacher",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Fittipaldi",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "name": "Giovinazzi",
+      "role": "race",
+      "activeRounds": [
+        1,
+        22
+      ]
+    }
+  ],
+  "driverSpecials": [
+    "No Driver",
+    "N/A"
+  ],
+  "teams": [
+    {
+      "displayName": "Mercedes",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "displayName": "Ferrari",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "displayName": "Red Bull",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "displayName": "Mclaren",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "displayName": "Aston",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "displayName": "Alpine",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "displayName": "Injured",
+      "activeRounds": [
+        1,
+        22
+      ]
+    },
+    {
+      "displayName": "Ligier",
+      "activeRounds": [
+        1,
+        22
+      ]
+    }
+  ],
+  "managers": [
+    "T. Wolff",
+    "F. Vasseur",
+    "C. Horner",
+    "Z. Brown",
+    "M. Krack",
+    "Szafnauer"
+  ],
+  "text": {
+    "sponsors": [
+      "Petronas",
+      "Gulf",
+      "Cognizant",
+      "Aramco",
+      "Oracle",
+      "Kick",
+      "Stake",
+      "Ineos",
+      "Shell",
+      "Honda",
+      "Google",
+      "Citrix",
+      "VMWare"
+    ],
+    "incidents": [
+      "Retired - electronics failure",
+      "Retired - stalled after spin",
+      "Retired - MGU-K failure",
+      "Retired - MGU-H failure",
+      "Retired - gearbox failure",
+      "Crashed - driver unhurt",
+      "Crashed - driver injured",
+      "Retired - turbo failure",
+      "Spun after shunt - Pit stop due",
+      "Spun:Chassis damage - Stop due",
+      "Spun and lost time - no damage",
+      "Floor damage - coming into pits",
+      "Wing damage - Pit stop due",
+      "Puncture - Pit stop required"
+    ],
+    "circuitGridText": "Bahrain   Saudi  Aussie   Miami  MonacoCanadian British Belgian   Dutch ItalianJapanese   Qatar Mexican  Brazil     USAAbuDhabi",
+    "trackReportGridText": "Bahrain  Saudi  Aussie   Miami  Monaco Canadian British Belgian  Dutch  ItalianJapanese  Qatar  Mexican Brazil    USA  AbuDhabi"
+  },
+  "sourceNotes": [
+    "Converted from tools/seasons/f12023-modern.json with tools/seasons/f12023-boundary-22.json."
+  ]
+}

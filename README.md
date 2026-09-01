@@ -115,6 +115,28 @@ Then load it locally with:
 http://127.0.0.1:8000/emulator.html#/seasons/f12023-boundary-experimental.sna
 ```
 
+The controlled round-17 probe is deliberately separate from that normal
+experimental artifact:
+
+```sh
+node tools/f1-boundary-runtime-probe.mjs build seasons/f12023-boundary-experimental.sna seasons/f12023-round17-probe-experimental.sna
+node tools/f1-boundary-runtime-probe.mjs verify seasons/f12023-round17-probe-experimental.sna
+```
+
+## Canonical Season Packages
+
+`tools/seasons/f12023-canonical.json` is the first offset-independent season
+package. It declares an engine profile, structured calendar, drivers, teams,
+points, and text. Compile it to an explicitly experimental 22-round snapshot:
+
+```sh
+node tools/f1-canonical-season.mjs validate tools/seasons/f12023-canonical.json
+node tools/f1-canonical-season.mjs compile seasons/f12023-modern.sna tools/seasons/f12023-canonical.json seasons/f12023-canonical-experimental.sna
+```
+
+The compiler validates profile capacity, data widths, circuit references, and
+points before invoking the existing safe or boundary snapshot builders.
+
 ## Long-Term Roadmap
 
 The detailed handoff plan for the 1950-2026 season archive, customizer,

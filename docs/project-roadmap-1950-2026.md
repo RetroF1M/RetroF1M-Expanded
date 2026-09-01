@@ -226,9 +226,15 @@ Verified:
 
 Not yet verified:
 
-- Race 17+ reached through natural in-game season progression.
-- Race 17+ uses correct race setup in a complete race session.
+- Race 17+ reached through a complete natural in-game season progression.
+- Race 17+ uses correct race setup in a complete manually played race session.
 - End-of-season behavior after race 22.
+
+Controlled-state evidence is now checked by
+`tools/f1-boundary-runtime-probe.mjs`: a separate probe snapshot with current
+round 16 proves that patched setup advances to round 17 and reads Baku's
+relocated lap count, record, length, and name. This is narrower than full
+manual QAOP race completion, which remains required before promotion.
 
 ## Current Technical Boundaries
 
@@ -374,6 +380,14 @@ Recommended structure:
 
 The builder should compile this canonical data into the snapshot tables and
 engine patch profile required for that season.
+
+Initial implementation delivered:
+
+- `tools/f1-canonical-season.mjs` validates canonical packages and compiles
+  either `safe-16` or `experimental-calendar-22` outputs.
+- `tools/seasons/f12023-canonical.json` converts the current 2023 data into
+  this format and round-trips byte-for-byte to the experimental 22-round
+  snapshot when compiled from the modern baseline.
 
 ## Customizer Requirements
 

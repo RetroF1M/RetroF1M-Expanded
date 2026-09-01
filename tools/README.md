@@ -63,3 +63,31 @@ node tools/f1-boundary-patch.mjs verify seasons/f12023-boundary-experimental.sna
 ```
 
 This does not modify the safe build or the default emulator route.
+
+## `f1-boundary-runtime-probe.mjs`
+
+Creates and verifies a separate controlled-state snapshot for the transition
+from round 16 to relocated round 17. It leaves both the safe and normal
+experimental snapshots unchanged, sets the current-round byte to 16, and
+checks the exact Baku data the patched race-setup routine will read after it
+increments to 17:
+
+```sh
+node tools/f1-boundary-runtime-probe.mjs build seasons/f12023-boundary-experimental.sna seasons/f12023-round17-probe-experimental.sna
+node tools/f1-boundary-runtime-probe.mjs verify seasons/f12023-round17-probe-experimental.sna
+```
+
+## `f1-canonical-season.mjs`
+
+Canonical season data is independent of `.sna` file offsets and declares the
+engine profile it needs. The compiler validates the profile, fixed-width Z80
+text, race count, references, and points before producing a playable snapshot.
+
+```sh
+node tools/f1-canonical-season.mjs import-legacy tools/seasons/f12023-modern.json tools/seasons/f12023-boundary-22.json tools/seasons/f12023-canonical.json
+node tools/f1-canonical-season.mjs validate tools/seasons/f12023-canonical.json
+node tools/f1-canonical-season.mjs compile seasons/f12023-modern.sna tools/seasons/f12023-canonical.json seasons/f12023-canonical-experimental.sna
+```
+
+Profiles currently supported: `safe-16` (up to 16 rounds) and
+`experimental-calendar-22` (17-22 rounds with byte-saturating totals).
