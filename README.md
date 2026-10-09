@@ -135,12 +135,26 @@ node tools/f1-canonical-season.mjs compile seasons/f12023-modern.sna tools/seaso
 ```
 
 The compiler validates profile capacity, data widths, circuit references, and
-points before invoking the existing safe or boundary snapshot builders.
+points before invoking the existing safe or boundary snapshot builders. Before
+compiling, assess whether the selected profile can represent the season without
+known engine compromises:
 
-The browser editor can also preview a canonical JSON package and validates its
-declared engine profile. It intentionally directs 17-22 round packages to the
-CLI compiler, so the browser cannot accidentally export a fixed 16-round
-snapshot as a longer season.
+```sh
+node tools/f1-canonical-season.mjs assess tools/seasons/f12023-canonical.json
+```
+
+`assess` reports calendar, live-grid, standings, historical-scoring, and QAOP
+runtime blockers. A successfully compiled snapshot is only a promoted playable
+season package after that assessment is clear and the QAOP release checklist is
+completed. In particular, the current 22-round profile remains a development
+path: it has byte-sized capped standings, a six-car live grid, and no natural
+round-17/end-of-season runtime proof.
+
+The browser editor can also preview a canonical JSON package, validates its
+declared engine profile, and shows the same headline release-capacity limits.
+It intentionally directs 17-22 round packages to the CLI compiler, so the
+browser cannot accidentally export a fixed 16-round snapshot as a longer
+season.
 
 ## Long-Term Roadmap
 

@@ -100,6 +100,10 @@
       background: var(--panel);
     }
 
+    section[hidden] {
+      display: none;
+    }
+
     h2 {
       margin: 0;
       font-size: 14px;
@@ -160,6 +164,14 @@
       color: #ff8d8d;
     }
 
+    .assessment {
+      margin: 0;
+      overflow: auto;
+      white-space: pre-wrap;
+      color: var(--muted);
+      font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
     @media (max-width: 900px) {
       header {
         align-items: flex-start;
@@ -193,6 +205,12 @@
   </header>
 
   <main>
+    <section id="canonicalAssessment" hidden>
+      <h2>Canonical Engine Assessment</h2>
+      <p class="hint">This is a release-capacity check, not a claim of QAOP runtime proof. The CLI remains authoritative for compilation and full schema validation.</p>
+      <pre id="canonicalAssessmentText" class="assessment"></pre>
+    </section>
+
     <section>
       <h2>Points</h2>
       <p class="hint">Comma-separated race points. The writer patches the award loop to the number of non-zero entries here.</p>
@@ -270,6 +288,8 @@
     const els = {
       file: document.getElementById("file"),
       canonicalFile: document.getElementById("canonicalFile"),
+      canonicalAssessment: document.getElementById("canonicalAssessment"),
+      canonicalAssessmentText: document.getElementById("canonicalAssessmentText"),
       status: document.getElementById("status"),
       downloadJson: document.getElementById("downloadJson"),
       downloadSna: document.getElementById("downloadSna"),
@@ -288,15 +308,73 @@
     let sourceBytes = null;
     let sourceName = "season.sna";
 
+    function activeEntryCount(entries, roundCount) {
+      if (!Array.isArray(entries)) return null;
+      let maximum = 0;
+      for (let round = 1; round <= roundCount; round += 1) {
+        const active = entries.filter((entry, index) => {
+          if (!entry || typeof entry !== "object") {
+            throw new Error(`raceEntries[${index}] must be an object`);
+          }
+          const coverage = entry.activeRounds ?? [1, roundCount];
+          if (!Array.isArray(coverage) || coverage.length !== 2 || !Number.isInteger(coverage[0]) || !Number.isInteger(coverage[1]) || coverage[0] < 1 || coverage[1] < coverage[0] || coverage[1] > roundCount) {
+            throw new Error(`raceEntries[${index}].activeRounds must be [firstRound, lastRound] within the calendar`);
+          }
+          return coverage[0] <= round && coverage[1] >= round;
+        });
+        maximum = Math.max(maximum, active.length);
+      }
+      return maximum;
+    }
+
+    function assessmentForCanonical(canonical, profile, roundCount) {
+      const awards = canonical.pointsSystem.awards;
+      const driverMaximum = Math.max(...awards) * roundCount;
+      const constructorMaximum = [...awards].sort((left, right) => right - left).slice(0, 2).reduce((total, award) => total + award, 0) * roundCount;
+      const blockers = [];
+      if (profile.developmentOnly) {
+        blockers.push("17-22-round engine: development-only; natural round-17 and end-of-season QAOP progression are unproven.");
+      }
+      if (driverMaximum > 255) blockers.push(`Driver maximum ${driverMaximum} exceeds the byte standings limit (255).`);
+      if (constructorMaximum > 255) blockers.push(`Constructor maximum ${constructorMaximum} exceeds the byte standings limit (255).`);
+      if (canonical.pointsSystem.fastestLapRule !== null && canonical.pointsSystem.fastestLapRule !== undefined) {
+        blockers.push("Declared fastest-lap scoring is not implemented by the snapshot builder.");
+      }
+      if (canonical.pointsSystem.droppedScores !== null && canonical.pointsSystem.droppedScores !== undefined) {
+        blockers.push("Declared dropped scores are not implemented by the snapshot builder.");
+      }
+      const activeEntries = activeEntryCount(canonical.raceEntries, roundCount);
+      if (activeEntries === null) {
+        blockers.push("No per-round raceEntries: this package cannot yet describe a real live grid.");
+      } else {
+        if (activeEntries > profile.gridCapacity) blockers.push(`Largest declared grid is ${activeEntries}; mapped live grid capacity is ${profile.gridCapacity}.`);
+        blockers.push("Race entries are canonical data only; the snapshot builder cannot yet map them into the live race arrays.");
+      }
+      const status = blockers.length ? "Development snapshot only — not a promoted playable season package." : "Candidate only — complete the QAOP release checklist before promotion.";
+      return [
+        status,
+        `Calendar: ${roundCount}/${profile.calendarCapacity} rounds`,
+        `Mapped live grid: ${profile.gridCapacity} cars`,
+        `Possible standings totals: driver ${driverMaximum}, constructor ${constructorMaximum} (byte limit 255)`,
+        ...(blockers.length ? ["Blockers:", ...blockers.map((blocker) => `- ${blocker}`)] : []),
+      ].join("\n");
+    }
+
     function canonicalPreview(canonical) {
-      const profiles = { "safe-16": 16, "experimental-calendar-22": 22 };
+      const profiles = {
+        "safe-16": { minimum: 16, calendarCapacity: 16, gridCapacity: 6, developmentOnly: false },
+        "experimental-calendar-22": { minimum: 17, calendarCapacity: 22, gridCapacity: 6, developmentOnly: true },
+      };
       if (canonical?.format !== "RetroF1M canonical season v1") {
         throw new Error("Not a RetroF1M canonical season v1 file");
       }
       const profile = canonical.engineProfile?.id;
       if (!profiles[profile]) throw new Error("Unknown canonical engine profile");
-      if (!Array.isArray(canonical.calendar) || canonical.calendar.length < 1 || canonical.calendar.length > profiles[profile]) {
-        throw new Error(`${profile} supports 1-${profiles[profile]} rounds`);
+      if (!Array.isArray(canonical.calendar) || canonical.calendar.length < profiles[profile].minimum || canonical.calendar.length > profiles[profile].calendarCapacity) {
+        const range = profiles[profile].minimum === profiles[profile].calendarCapacity
+          ? String(profiles[profile].calendarCapacity)
+          : `${profiles[profile].minimum}-${profiles[profile].calendarCapacity}`;
+        throw new Error(`${profile} supports ${range} rounds`);
       }
       if (!Array.isArray(canonical.pointsSystem?.awards) || canonical.pointsSystem.awards.length < 1 || canonical.pointsSystem.awards.length > 15) {
         throw new Error("Canonical pointsSystem.awards must have 1-15 entries");
@@ -313,6 +391,7 @@
       return {
         profile,
         roundCount: canonical.calendar.length,
+        assessment: assessmentForCanonical(canonical, profiles[profile], canonical.calendar.length),
         season: {
           points: canonical.pointsSystem.awards,
           drivers: (canonical.drivers ?? []).map((driver) => typeof driver === "string" ? driver : driver.name),
@@ -610,6 +689,7 @@
       }
       sourceBytes = bytes;
       sourceName = file.name;
+      els.canonicalAssessment.hidden = true;
       renderSeason(parseSeason(bytes));
       els.downloadJson.disabled = false;
       els.downloadSna.disabled = false;
@@ -625,6 +705,8 @@
         sourceBytes = null;
         els.downloadJson.disabled = true;
         els.downloadSna.disabled = true;
+        els.canonicalAssessmentText.textContent = preview.assessment;
+        els.canonicalAssessment.hidden = false;
         setStatus(`Previewing ${file.name}: ${preview.roundCount} rounds, ${preview.profile}. Use the canonical CLI compiler to export its .sna.`, "ok");
       } catch (error) {
         setStatus(error.message, "error");

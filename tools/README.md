@@ -81,13 +81,25 @@ node tools/f1-boundary-runtime-probe.mjs verify seasons/f12023-round17-probe-exp
 
 Canonical season data is independent of `.sna` file offsets and declares the
 engine profile it needs. The compiler validates the profile, fixed-width Z80
-text, race count, references, and points before producing a playable snapshot.
+text, race count, references, points, and optional per-round `raceEntries`
+before producing a snapshot. `raceEntries` preserve a driver's team, car
+number, and active-round coverage for the eventual full-grid builder; the
+current snapshot compiler deliberately does not pretend to apply them to the
+six-car live grid.
 
 ```sh
 node tools/f1-canonical-season.mjs import-legacy tools/seasons/f12023-modern.json tools/seasons/f12023-boundary-22.json tools/seasons/f12023-canonical.json
 node tools/f1-canonical-season.mjs validate tools/seasons/f12023-canonical.json
+node tools/f1-canonical-season.mjs assess tools/seasons/f12023-canonical.json
 node tools/f1-canonical-season.mjs compile seasons/f12023-modern.sna tools/seasons/f12023-canonical.json seasons/f12023-canonical-experimental.sna
 ```
 
-Profiles currently supported: `safe-16` (up to 16 rounds) and
+Profiles currently supported: `safe-16` (exactly 16 rounds) and
 `experimental-calendar-22` (17-22 rounds with byte-saturating totals).
+
+`safe-16` is exactly sixteen rounds because the unmodified engine's season
+flow is fixed at that count. `experimental-calendar-22` accepts 17-22 rounds,
+but is development-only until natural progression beyond round 16 and
+end-of-season behavior are tested in QAOP. Run `assess` before treating any
+output as a release candidate: it identifies unrepresentable standings,
+historical scoring rules, race-grid declarations, and profile QA boundaries.

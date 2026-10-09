@@ -27,6 +27,17 @@ The editor currently covers:
 The browser editor is intentionally static. It does not need a build step
 or a server.
 
+When a canonical season JSON is previewed, the editor shows a concise engine
+assessment alongside the fixed-table preview. It distinguishes a snapshot the
+current tools can compile from a season package that can honestly be promoted:
+calendar profile, byte-sized standings, six-car live-grid capacity, declared
+historical scoring rules, and known QAOP runtime boundaries are all surfaced.
+Use the CLI for the authoritative validation and compilation:
+
+```sh
+node tools/f1-canonical-season.mjs assess tools/seasons/f12023-canonical.json
+```
+
 ## CLI Workflow
 
 The same table map is available from `tools/f1-season-tool.mjs`:
