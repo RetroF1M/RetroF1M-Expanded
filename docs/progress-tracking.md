@@ -63,8 +63,12 @@
   - **✅ Confirmed car array structure**: 4 parallel arrays, 1 byte per car (12 cars total)
   - **✅ Confirmed points structure**: 6 constructor points (0x6910), 12 driver points (0x6948, 2 bytes each)
   - **✅ Identified 24-byte special array at 0x692F** (semantics still unknown)
-  - **⏳ Still searching**: Car numbers, sponsor value, funds/balance, upgrade levels, driver-pool bounds, manager-name stride
-- **Tools Created**: `tools/dump-bytes.mjs`, `tools/search-text.mjs`, `tools/search-bytes.mjs`
+  - **✅ Located manager names at 0x2FE3**: 10-character stride per manager (6 managers = 60 bytes)
+  - **⚠️ Car numbers NOT found**: Not in the 4 parallel car arrays; may be derived or stored elsewhere
+  - **⚠️ Sponsor/funds/upgrades NOT located**: Regions contain code, need runtime RAM tracing
+  - **⚠️ Driver-pool bounds NOT located**: Need AI drafting code tracing
+- **Tools Created**: `tools/dump-bytes.mjs`, `tools/search-text.mjs`, `tools/search-bytes.mjs`, `tools/analyze-car-numbers.mjs`, `tools/analyze-team-data.mjs`
+- **Recommendation**: Focus on proven grid arrays (car states, points, driver mapping) for relocation to 26-car capacity. Leverage existing f1-season-tool.mjs for car numbers, sponsors, funds, upgrades rather than deep RAM analysis.
 
 ### Phase 0.3: GitHub Repository Setup ✅
 - **Status**: COMPLETE
