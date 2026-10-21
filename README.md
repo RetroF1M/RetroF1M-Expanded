@@ -1,7 +1,9 @@
-# RetroF1M.github.io
+# RetroF1M-Expanded
 
-RetroF1M hosts modified ZX Spectrum `.sna` snapshots of CRL's 1985
-Formula One in the QAOP JavaScript ZX Spectrum emulator.
+RetroF1M-Expanded expands the original RetroF1M project with full grid support (up to 26 cars), variable calendar sizes (up to 22+ races), and 16-bit championship points. This is the active development branch for creating a playable `.sna` season package for every F1 year 1950-2026.
+
+**Repository**: https://github.com/RetroF1M/RetroF1M-Expanded
+**Original Project**: https://github.com/RetroF1M/RetroF1M.github.io
 
 **Status**: Phase 0 - Foundation Research & Repository Setup. See `docs/progress-tracking.md` for current progress.
 
