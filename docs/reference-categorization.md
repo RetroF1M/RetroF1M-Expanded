@@ -1,5 +1,25 @@
 # Reference Site Categorization
 
+## Blocker Identified
+
+### Offset Calculation Issue
+The snapshot files in the repository appear to have been modified by previous patches. The byte patterns at expected addresses do not match the disassembly.
+
+**Current issue:**
+- `z80-inspect.mjs` uses: `addr - 0x4000 + 0x1B` (correct)
+- My patchers tried: `addr - 0x4000 + 0x1B` (should be correct)
+- But the bytes at those offsets don't match the disassembly
+
+**Example:**
+- Disassembly shows: `0xC912: LD B,0x06`
+- But file offset calculation shows: byte is 0x23 (35), not 0x06
+- This suggests the snapshot has been modified
+
+### Resolution Needed
+1. Use a truly clean baseline snapshot from `safe-original` branch
+2. Verify disassembly matches before patching
+3. Apply patches using the correct offset formula from z80-inspect.mjs
+
 ## Method
 Each reference site was examined using `z80-inspect.mjs disasm` to identify the instruction that uses the array address.
 
@@ -15,14 +35,33 @@ These instructions load the array address directly into a register. They need th
 | 0xABF5 | 0x6991 | LD HL,0x6991 | 0xAA98 | Pending |
 | 0xAD5F | 0x6991 | LD HL,0x6991 | 0xAA98 | Pending |
 | 0xADA6 | 0x6991 | LD HL,0x6991 | 0xAA98 | Pending |
+| 0xB006 | 0x6A51 | LD HL,0x6A51 | 0xAAB0 | Pending |
+| 0xB5BF | 0x6991 | LD HL,0x6991 | 0xAA98 | Pending |
 | 0xBFB0 | 0x6979 | LD HL,0x6979 | 0xAA70 | Pending |
 | 0xBFE9 | 0x6985 | LD HL,0x6985 | 0xAA84 | Pending |
 | 0xC022 | 0x6991 | LD HL,0x6991 | 0xAA98 | Pending |
 | 0xC1D1 | 0x6985 | LD HL,0x6985 | 0xAA84 | Pending |
-| 0xC918 | 0x6991 | LD HL,0x6991 | 0xAA98 | ✅ Patched |
-| 0xC91D | 0x6A51 | LD IX,0x6A51 | 0xAAB0 | ✅ Patched |
-| 0xC921 | 0x6985 | LD IY,0x6985 | 0xAA84 | ✅ Patched |
-| 0xC925 | 0x6979 | LD DE,0x6979 | 0xAA70 | ✅ Patched |
+| 0xC249 | 0x6979 | LD HL,0x6979 | 0xAA70 | Pending |
+| 0xC25F | 0x6985 | LD HL,0x6985 | 0xAA84 | Pending |
+| 0xC2C9 | 0x6979 | LD HL,0x6979 | 0xAA70 | Pending |
+| 0xC2D0 | 0x6985 | LD HL,0x6985 | 0xAA84 | Pending |
+| 0xC2D7 | 0x6991 | LD HL,0x6991 | 0xAA98 | Pending |
+| 0xC793 | 0x6985 | LD HL,0x6985 | 0xAA84 | Pending |
+| 0xC799 | 0x6A51 | LD HL,0x6A51 | 0xAAB0 | Pending |
+| 0xC79F | 0x6991 | LD HL,0x6991 | 0xAA98 | Pending |
+| 0xC933 | 0x6991 | LD HL,0x6991 | 0xAA98 | ✅ Patched |
+| 0xC938 | 0x6A51 | LD IX,0x6A51 | 0xAAB0 | ✅ Patched |
+| 0xC93C | 0x6985 | LD IY,0x6985 | 0xAA84 | ✅ Patched |
+| 0xC940 | 0x6979 | LD DE,0x6979 | 0xAA70 | ✅ Patched |
+| 0xC934 | 0x6991 | Need analysis | 0xAA98 | Pending |
+| 0xC93A | 0x6A51 | Need analysis | 0xAAB0 | Pending |
+| 0xC93E | 0x6985 | Need analysis | 0xAA84 | Pending |
+| 0xC941 | 0x6979 | Need analysis | 0xAA70 | Pending |
+| 0xC98B | 0x6979 | Need analysis | 0xAA70 | Pending |
+| 0xC996 | 0x6985 | Need analysis | 0xAA84 | Pending |
+| 0xC99D | 0x6A51 | Need analysis | 0xAAB0 | Pending |
+| 0xC9C9 | 0x6991 | Need analysis | 0xAA98 | Pending |
+| Remaining sites | various | Need analysis | various | Pending |
 
 ### Indirect References (Complex)
 These use calculated addresses or index registers. May need code logic changes.
