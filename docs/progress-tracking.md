@@ -53,6 +53,19 @@
 - **Key Finding**: Upper memory accessible but requires complex Z80 banking patches
 - **Decision**: Use manual 16-bit relocation in 48K (simpler, proven pattern from boundary patch)
 
+### Phase 1.2: Grid Array Grounding - IN PROGRESS
+- **Status**: IN PROGRESS
+- **Date**: 2026-10-21
+- **Deliverable**: `docs/grid-array-grounding-progress.md`
+- **Summary**: Systematically examining car data arrays to locate the 6 to-ground variables.
+- **Progress**:
+  - **✅ Discovered initialization loop at 0xC910-C960** - sets up all car arrays
+  - **✅ Confirmed car array structure**: 4 parallel arrays, 1 byte per car (12 cars total)
+  - **✅ Confirmed points structure**: 6 constructor points (0x6910), 12 driver points (0x6948, 2 bytes each)
+  - **✅ Identified 24-byte special array at 0x692F** (semantics still unknown)
+  - **⏳ Still searching**: Car numbers, sponsor value, funds/balance, upgrade levels, driver-pool bounds, manager-name stride
+- **Tools Created**: `tools/dump-bytes.mjs`, `tools/search-text.mjs`, `tools/search-bytes.mjs`
+
 ### Phase 0.3: GitHub Repository Setup ✅
 - **Status**: COMPLETE
 - **Date**: 2026-10-21
