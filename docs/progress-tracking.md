@@ -53,11 +53,11 @@
 - **Key Finding**: Upper memory accessible but requires complex Z80 banking patches
 - **Decision**: Use manual 16-bit relocation in 48K (simpler, proven pattern from boundary patch)
 
-### Phase 1.2: Grid Array Grounding - IN PROGRESS
-- **Status**: IN PROGRESS
+### Phase 1.2: Grid Array Grounding - COMPLETE
+- **Status**: COMPLETE
 - **Date**: 2026-10-21
 - **Deliverable**: `docs/grid-array-grounding-progress.md`
-- **Summary**: Systematically examining car data arrays to locate the 6 to-ground variables.
+- **Summary**: Systematically examined car data arrays to locate the 6 to-ground variables.
 - **Progress**:
   - **✅ Discovered initialization loop at 0xC910-C960** - sets up all car arrays
   - **✅ Confirmed car array structure**: 4 parallel arrays, 1 byte per car (12 cars total)
@@ -69,6 +69,39 @@
   - **⚠️ Driver-pool bounds NOT located**: Need AI drafting code tracing
 - **Tools Created**: `tools/dump-bytes.mjs`, `tools/search-text.mjs`, `tools/search-bytes.mjs`, `tools/analyze-car-numbers.mjs`, `tools/analyze-team-data.mjs`
 - **Recommendation**: Focus on proven grid arrays (car states, points, driver mapping) for relocation to 26-car capacity. Leverage existing f1-season-tool.mjs for car numbers, sponsors, funds, upgrades rather than deep RAM analysis.
+
+### Phase 1.3: Memory Analysis for Relocation - COMPLETE
+- **Status**: COMPLETE
+- **Date**: 2026-10-21
+- **Deliverable**: `docs/grid-relocation-plan.md`
+- **Summary**: Analyzed available memory for grid array relocation.
+- **Findings**:
+  - **No contiguous 450-byte block** available for 26-car expansion
+  - **Maximum free block**: 150 bytes at 0xAA70-0xAB05
+  - **48K memory is severely constrained**
+- **Revised Approach**:
+  - **Phase 1**: 20-car expansion (2023 season) - requires ~260 bytes, feasible
+  - **Phase 2**: 26-car expansion (historical seasons) - requires ~450 bytes + optimization/128K
+- **20-Car Segmentation Plan**:
+  - Core car arrays (4 × 20 bytes = 80 bytes) to 0xAA70
+  - Points arrays (50 bytes) segmented
+  - Team arrays (10 bytes) expand in place
+  - Race arrays (40 bytes) segmented
+- **Season-Specific Configuration**: Add activeTeams/activeCars/activeDrivers to f1-season-tool.mjs
+- **Tools Created**: `tools/find-free-blocks.mjs`, `tools/find-free-blocks-after-calendar.mjs`, `tools/find-free-blocks-100.mjs`, `tools/find-free-blocks-lower.mjs`, `tools/search-tape-save.mjs`
+
+### Phase 1.4: 20-Car Grid Relocation - IN PROGRESS
+- **Status**: IN PROGRESS
+- **Date**: 2026-10-21
+- **Deliverable**: New experimental snapshot with 20-car support
+- **Summary**: Implement 20-car grid expansion for 2023 season.
+- **Next Steps**:
+  1. Create new experimental snapshot from f12023-boundary-experimental.sna
+  2. Relocate 4 core car arrays to 0xAA70
+  3. Update initialization loop to initialize 20 entries
+  4. Update all reference sites (z80-inspect.mjs refs)
+  5. Add activeCarCount variable
+  6. Test with 20 cars
 
 ### Phase 0.3: GitHub Repository Setup ✅
 - **Status**: COMPLETE
@@ -125,7 +158,13 @@
 
 ## Next Immediate Steps
 
-1. **Phase 1.2**: Complete grid array grounding (6 to-ground items) (NEXT)
+1. **Phase 1.4**: Implement 20-car grid relocation (NEXT)
+   - Create new experimental snapshot
+   - Relocate core car arrays to 0xAA70
+   - Update initialization loop to 20 entries
+   - Update all reference sites
+   - Add activeCarCount variable
+   - Test with 20 cars
 2. **Phase 3**: Manual 16-bit points relocation in 48K mode (instead of 128K)
 3. **Investigate**: "er laps" display corruption issue (display rendering code)
 4. **Investigate**: Tape save prompt hang - remove obsolete tape save mechanism
@@ -141,11 +180,15 @@
 - **Risk**: None currently known
 
 ### Grid Expansion
-- **Status**: Planning phase only
+- **Status**: 20-car relocation in progress
 - **Open Questions**:
-  - Contiguous free RAM for ~450-520 byte relocation not yet found
-  - 6 to-ground RAM variables not yet located
-  - Display buffer capacity for paging not yet verified
+  - Contiguous free RAM for 26-car expansion not available in 48K mode
+  - 20-car expansion feasible with segmented relocation at 0xAA70
+  - 26-car expansion requires memory optimization or 128K banking
+- **Memory Constraints**:
+  - Maximum free block: 150 bytes at 0xAA70-0xAB05
+  - 20-car expansion requires ~260 bytes (feasible with segmentation)
+  - 26-car expansion requires ~450 bytes (not feasible in current 48K layout)
 
 ### 128K Spectrum
 - **Status**: Research phase
