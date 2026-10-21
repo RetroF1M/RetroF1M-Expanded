@@ -17,6 +17,8 @@ teams, drivers, points, tracks), eventually the full real-size grid. This
 is the **original game** edited via Z80 patches + `.sna` editing, delivered
 through QAOP. **Not** a JS remake, dashboard, simulator or lab.
 
+**Core Principle**: Make the game work 100% before expanding scope. Each milestone must have full automated QAOP test passing.
+
 ## 2. Working policies (in force)
 
 - **No new experimental/probe/duplicate `.sna` files.** The user objected
@@ -33,6 +35,13 @@ through QAOP. **Not** a JS remake, dashboard, simulator or lab.
 - **Honest proof.** Never claim runtime proof from static checks or synthetic
   snapshots. State plainly what is tested vs unknown. Disassembly = proven
   *structure*; QAOP natural play = proven *runtime*.
+- **Hands-off testing.** All testing must be automated using QAOP with the
+  qaop-spectrum-control skill. Select 0 players for spectator mode, speed up
+  to 32x, monitor round byte, document all observations.
+- **Continuous documentation.** Update .md files with all changes and progress
+  to prevent losing track. Use `docs/progress-tracking.md` for milestone tracking.
+- **Scope management.** Do not add new features until core works 100%. Each
+  milestone must have full automated QAOP test passing.
 - Preserve uncommitted worktree changes (`docs/project-roadmap-1950-2026.md`,
   `.clinerules`). Do not clobber; add to docs, don't duplicate.
 
@@ -82,30 +91,52 @@ byte-total artifact to investigate, not asserted.
 
 ## 5. Progress log (this work stream)
 
+### Phase 0 Foundation (2026-10-21)
+- **Phase 0.1 — DONE.** Original game research completed. Documented in
+  `docs/original-game-research.md`: all game mechanics, controls, flow, and
+  management systems understood.
+- **Phase 0.2 — DONE.** QAOP emulator research completed. Documented in
+  `docs/qaop-emulator-research.md`: 48K/128K support, JavaScript API,
+  automation patterns, limitations documented.
+- **Phase 0.4 — IN PROGRESS.** Documentation updates in progress. Created
+  `docs/progress-tracking.md` for milestone tracking. Updated this file with
+  new policies. Remaining: README.md, project-roadmap, boundary-experimental.md.
+
+### Previous Work (Priority 1 & 2)
 - **Priority 1 — DONE (proven).** 22-round calendar verified by natural play
   through race 22 and season loop. Documented in `docs/boundary-experimental.md`.
 - **Priority 2, Step 1 — DONE (committed).** `docs/race-grid-expansion-step1-sitemap.md`
   (commit `65a34fb`): classified site map + relocation plan for 6→13 teams /
   12→26 cars, sized to historical max with active-count-per-season. Corrected an
   earlier overstatement (the freed block is fragmented, not one clean span).
-- **New-variables plan — DONE (this doc set).**
+- **New-variables plan — DONE.**
   `docs/grid-expansion-new-variables-plan.md`: the 6 per-team/per-car features
   that must scale (driver/car numbers, managers, sponsors, funds, upgrades, AI
   draft) + scaling rules + honest proven/unknown split.
 
 ## 6. Actively being worked on
 
-Grounding the 6 to-ground items (locate RAM vars + AI-draft bounds + manager
-slot stride + the free relocation target) so the Step-2 relocation layout is
-exact. Read-only analysis; no `.sna` built or modified.
+**Phase 0.4**: Completing documentation updates (README.md, project-roadmap-1950-2026.md,
+boundary-experimental.md). No code changes yet - establishing foundation first.
+
+**Phase 0.5 (next)**: Baseline automated test of `seasons/f12023-boundary-experimental.sna`
+to establish working baseline before proceeding with 128k investigation and grid work.
 
 ## 7. Next
 
-1. Finish grounding (this section 6).
-2. **Step 2 (Priority 2):** relocate+expand grid AND management arrays into a
+**Immediate (Phase 0)**:
+1. Complete Phase 0.4 documentation updates.
+2. Phase 0.5: Run baseline automated test (full 22-round season with 0-player mode).
+3. Phase 0.3: Set up new GitHub repo "RetroF1M-Expanded" (awaiting user approval).
+
+**After Phase 0 complete**:
+1. Phase 1.1: Investigate 128K Spectrum for 16-bit points solution.
+2. Phase 1.2: Finish grounding 6 to-ground items (RAM vars + AI-draft bounds + manager
+   slot stride + free relocation target).
+3. **Step 2 (Priority 2):** relocate+expand grid AND management arrays into a
    proven-free target on a **new** `.sna`; introduce `teamCount`/`carCount` RAM
    variables; repoint every classified site. Show the per-step plan before any
    patch, per the user's instruction.
-3. Steps 3–6: variable loop-bounds → timing board/display → **last** open human
+4. Steps 3–6: variable loop-bounds → timing board/display → **last** open human
    input bounds; then data (2023 writes 10, POC writes 13); note 2026 (11 teams)
    is within the 13-team ceiling.

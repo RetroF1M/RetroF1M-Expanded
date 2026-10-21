@@ -3,6 +3,8 @@
 This document is the handoff source of truth for continuing RetroF1M work in a
 new chat or branch.
 
+**Status**: Phase 0 - Foundation Research & Repository Setup (2026-10-21). See `docs/progress-tracking.md` for detailed current progress.
+
 ## Non-Negotiable Product Direction
 
 RetroF1M must remain the original ZX Spectrum Formula One game running through
@@ -114,7 +116,7 @@ Expected package outputs:
 | Branch | Commit | Purpose |
 | --- | --- | --- |
 | `safe-build-pit-toggle-points` | `f18535d` | Protected safe build with pit toggle and modern 2023 points |
-| `boundary-grid-calendar-z80` | `9a0d8c6` | Experimental engine boundary branch |
+| `boundary-grid-calendar-z80` | `5a95f8c` | Current working branch; calendar/compiler/editor work and existing experimental artifacts |
 | `main` / `origin/main` | `f0aec01` | Original upstream state with editor assets |
 
 Do not continue boundary experiments on `safe-build-pit-toggle-points`. Create
@@ -392,6 +394,16 @@ Initial implementation delivered:
   and fixed-table preview, while deliberately requiring the CLI compiler for
   17-22-round `.sna` output.
 
+These canonical/compiler/editor additions are already present in commits
+`f122093` and `5a95f8c`. They are existing work, not a request to create more
+probe or duplicate snapshots. The generated files
+`seasons/f12023-canonical-experimental.sna` and
+`seasons/f12023-round17-probe-experimental.sna` are already tracked on the
+current branch. Do not create additional lab artifacts. Decide separately
+whether these existing files/tools should be retained or cleaned up; do not
+delete or rewrite them without checking their use and preserving recoverable
+history.
+
 ## Customizer Requirements
 
 The customizer/editor should evolve from a fixed-table editor into a
@@ -422,27 +434,54 @@ Nice-to-have capabilities:
 - generate a QA checklist per season
 - show source/provenance notes in editor
 
-## Proposed One-Shot Work Sequence For A New Chat
+## Current Handoff: QAOP Runtime Checkpoint
 
-Use this order in a new one-shot session:
+The user wants direct progress on the playable game and editor toward editable
+1950-2026 season packages, full calendars, and eventually full race grids. Do
+not create more lab/probe/duplicate `.sna` artifacts or turn the work into a
+research-only exercise. Continue on the current working branch; preserve the
+protected `safe-build-pit-toggle-points` branch and its safe build.
 
-1. Start from `boundary-grid-calendar-z80`.
-2. Confirm `safe-build-pit-toggle-points` remains untouched.
-3. Run:
+Most recent real QAOP test of
+`seasons/f12023-boundary-experimental.sna`:
 
-```sh
-node tools/f1-boundary-patch.mjs verify seasons/f12023-boundary-experimental.sna 22
-```
+- Loaded the existing snapshot in the QAOP emulator and advanced through the
+  title and player-count screens.
+- Selected 0 players, which starts an automated race flow without requiring
+  driving.
+- Reached Bahrain race setup/results and then the live Bahrain race screen.
+- Confirmed the live timing board advanced over subsequent observations
+  (through approximately lap 15); a later view showed a pit-stop sequence.
+- This establishes that race 1 can run in QAOP. It does **not** establish that
+  the season finishes races 1-16, reaches race 17, or ends correctly after the
+  configured final race.
+- No repository files or snapshots were changed during this QAOP attempt.
 
-4. Runtime-test race 17+ in QAOP or by controlled snapshot-state patching.
-5. If race 17+ works, document the proof and keep the 22-round patch.
-6. If race 17+ fails, inspect the exact failing routine and patch only that.
-7. Build a canonical season JSON schema and convert current 2023 data into it.
-8. Add compiler path from canonical season JSON to `.sna`.
-9. Add editor support for canonical season files.
-10. Start 8-car grid patch only after calendar runtime proof is stable.
-11. Keep every risky engine change behind an explicit experimental output file.
-12. Commit after each playable/checkable milestone.
+Do not spend an entire session passively waiting through 16 races as the
+default next step. First make the handoff actionable: use the existing browser
+session if available, choose 0 players, and advance with Enter as needed. If
+continuous automated progression is too slow or the emulator session is lost,
+record the tested boundary and continue with another concrete game/editor
+deliverable; do not create a synthetic round-17 `.sna` just to claim runtime
+proof. Only revisit race-17 runtime proof when it can be obtained through the
+real game flow or a safe, explicitly approved test method.
+
+## Next Work Sequence
+
+1. Check branch and worktree state; do not alter the protected safe branch.
+2. Continue the existing QAOP session if practical and low-cost. The current
+   known checkpoint is the automated Bahrain race, not race 17.
+3. Prioritize a user-visible game/editor improvement that directly advances
+   season editability or playable season creation; work on the project, not a
+   speculative lab. Keep risky Z80 changes isolated from the safe branch and
+   use the project’s agreed naming/output policy.
+4. Generalize season data/build/editor support so variable historical race
+   counts and season-specific data can be represented and validated.
+5. Expand the actual playable calendar and grid capabilities in verifiable
+   increments. Calendar runtime proof is still needed; full-grid expansion is
+   not implemented.
+6. Verify the game in QAOP and run relevant editor/compiler checks for each
+   milestone. Commit every playable or checkable milestone.
 
 ## Verification Checklist
 
@@ -460,6 +499,10 @@ For every playable `.sna` milestone:
 - at least one race can be started
 - points are awarded as expected
 - season progression reaches the expected next race
+
+For calendar milestones, separately record which rounds were actually
+reached in QAOP; static patch verification or controlled RAM inspection alone
+does not count as proof that the in-game season progression works.
 
 For promoted season data:
 

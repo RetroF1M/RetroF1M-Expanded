@@ -3,6 +3,10 @@
 This branch keeps `safe-build-pit-toggle-points` untouched. The experimental
 snapshot is generated separately from `seasons/f12023-modern.sna`.
 
+**Status**: Previously proven through race 22 via natural play (rounds 17-22 tested).
+**Last Verified**: Previous session (see `docs/progress-tracking.md` for details).
+**Next Action**: Fresh baseline test scheduled for Phase 0.5 to confirm still working.
+
 ## Build
 
 ```sh

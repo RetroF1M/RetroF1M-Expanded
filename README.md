@@ -3,6 +3,8 @@
 RetroF1M hosts modified ZX Spectrum `.sna` snapshots of CRL's 1985
 Formula One in the QAOP JavaScript ZX Spectrum emulator.
 
+**Status**: Phase 0 - Foundation Research & Repository Setup. See `docs/progress-tracking.md` for current progress.
+
 ## Current Package
 
 - Play the patched 2023 build: open `emulator.html`.

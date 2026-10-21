@@ -1,0 +1,9 @@
+Project: RetroF1M. Keep the original ZX Spectrum Formula One game, QAOP
+controls and .sna delivery. Never build a JS remake.
+- Never touch branch safe-build-pit-toggle-points or seasons/f12023-modern.sna.
+- Work only on boundary-grid-calendar-z80.
+- Do NOT create new experimental/probe/duplicate .sna files.
+- Do not claim runtime proof from static checks or synthetic probes.
+- Read docs/ and README.md before changing workflows.
+- Be candid about what is tested vs unknown. Commit only finished,
+  checkable milestones.
