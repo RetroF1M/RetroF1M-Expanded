@@ -1,10 +1,33 @@
 # RetroF1M Progress Tracking
 
 **Last Updated**: 2026-10-21
-**Current Phase**: Phase 0 - Foundation Research & Repository Setup
-**Branch**: boundary-grid-calendar-z80
+**Current Phase**: Phase 1 - Technical Foundation Investigation
+**Branch**: development
 
 ## Completed Milestones
+
+### Phase 0: Foundation Research & Repository Setup ✅
+- **Status**: COMPLETE
+- **Date**: 2026-10-21
+- **Deliverables**:
+  - `docs/original-game-research.md` - Original game mechanics documented
+  - `docs/qaop-emulator-research.md` - QAOP emulator capabilities documented
+  - `docs/progress-tracking.md` - Milestone tracking system
+  - `docs/github-repo-setup.md` - Repository setup instructions
+  - `docs/baseline-test-results-2026-10-21.md` - Baseline test results
+  - `docs/128k-spectrum-investigation.md` - 128K investigation findings
+  - GitHub repo: https://github.com/RetroF1M/RetroF1M-Expanded
+  - Playwright MCP configured for browser automation
+- **Summary**: All foundation work complete. GitHub repo created, baseline tested, 128K investigated and decided against.
+- **Issues Found**:
+  - "er laps" display corruption (cosmetic)
+  - Points cap at 255 (expected, Phase 3 will fix)
+  - Tape save prompt hang (obsolete mechanism, needs removal)
+
+### Phase 1.1: 128K Spectrum Investigation ✅
+- **Status**: COMPLETE
+- **Date**: 2026-10-21
+- **Decision**: Manual 16-bit relocation in 48K mode (not 128K)
 
 ### Phase 0.1: Original Game Research ✅
 - **Status**: COMPLETE
@@ -19,6 +42,16 @@
 - **Summary**: Researched QAOP/JS emulator capabilities. Documented 48K vs 128K support, JavaScript API (window.emu.kbd, memory access, speed control), automation patterns, and limitations. 128K investigation pending.
 
 ## Current Work In Progress
+
+**Phase 1: Technical Foundation Investigation**
+
+### Phase 1.1: 128K Spectrum Investigation ✅
+- **Status**: COMPLETE
+- **Date**: 2026-10-21
+- **Deliverable**: `docs/128k-spectrum-investigation.md`
+- **Summary**: Investigated 128K Spectrum support in QAOP. Upper memory (0x8000+) is accessible and writable. ROM signature indicates 128K mode active. **Decision**: Proceed with manual 16-bit relocation in 48K mode instead of 128K. Banking complexity outweighs benefits for this use case.
+- **Key Finding**: Upper memory accessible but requires complex Z80 banking patches
+- **Decision**: Use manual 16-bit relocation in 48K (simpler, proven pattern from boundary patch)
 
 ### Phase 0.3: GitHub Repository Setup ✅
 - **Status**: COMPLETE
@@ -37,15 +70,16 @@
   - development: Active development (current branch)
 - **Working Branch**: development (contains all Phase 0 work)
 
-### Phase 0.4: Documentation Updates
-- **Status**: IN PROGRESS
+### Phase 0.4: Documentation Updates ✅
+- **Status**: COMPLETE
+- **Date**: 2026-10-21
 - **Tasks**:
   - [x] Create progress-tracking.md (this file)
-  - [ ] Update README.md with new repository context
-  - [ ] Update project-roadmap-1950-2026.md with refined phases
-  - [ ] Update project-state-and-handoff.md with current status
-  - [ ] Update boundary-experimental.md with proven vs unproven
-  - [ ] Update all tool READMEs
+  - [x] Update README.md with new repository context
+  - [x] Update project-roadmap-1950-2026.md with refined phases
+  - [x] Update project-state-and-handoff.md with current status
+  - [x] Update boundary-experimental.md with proven vs unproven
+  - [x] Update all tool READMEs
 
 ### Phase 0.5: Baseline Testing ✅
 - **Status**: COMPLETE
@@ -74,15 +108,19 @@
 
 ## Next Immediate Steps
 
-1. **Phase 1.1**: Investigate 128K Spectrum for 16-bit points (NEXT)
-2. **Phase 1.2**: Complete grid array grounding (6 to-ground items)
+1. **Phase 1.2**: Complete grid array grounding (6 to-ground items) (NEXT)
+2. **Phase 3**: Manual 16-bit points relocation in 48K mode (instead of 128K)
 3. **Investigate**: "er laps" display corruption issue (display rendering code)
+4. **Investigate**: Tape save prompt hang - remove obsolete tape save mechanism
 
 ## Known Issues
 
 ### Current Snapshot (f12023-boundary-experimental.sna)
-- **Status**: Previously proven through race 22 (natural play)
-- **Needs**: Fresh baseline test to confirm still working
+- **Status**: ✅ Baseline tested and working (22 rounds completed in 90.7s)
+- **Issues**:
+  - "er laps" display corruption (cosmetic)
+  - Points cap at 255 (expected, to be fixed in Phase 3)
+  - Tape save prompt hangs game (obsolete mechanism, needs removal)
 - **Risk**: None currently known
 
 ### Grid Expansion
