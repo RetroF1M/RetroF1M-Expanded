@@ -47,22 +47,36 @@
   - [ ] Update boundary-experimental.md with proven vs unproven
   - [ ] Update all tool READMEs
 
-### Phase 0.5: Baseline Testing
-- **Status**: PENDING
+### Phase 0.5: Baseline Testing ✅
+- **Status**: COMPLETE
+- **Date**: 2026-10-21
 - **Tasks**:
-  - Serve emulator locally
-  - Load seasons/f12023-boundary-experimental.sna
-  - Select 0 players for automated mode
-  - Speed up to 32x
-  - Run full 22-round season
-  - Document any crashes, corruption, or issues
-  - Establish working baseline
+  - [x] Serve emulator locally (running on port 8000)
+  - [x] Load seasons/f12023-boundary-experimental.sna
+  - [x] Create automation script (tools/baseline-test-script.js)
+  - [x] Script saves to repository for future use
+  - [x] Run full 22-round season at 128x speed
+  - [x] Document any crashes, corruption, or issues
+  - [x] Establish working baseline
+- **Automation Script**: `tools/baseline-test-script.js`
+- **Test Results**:
+  - **Total Time**: 90.7 seconds at 128x speed
+  - **Rounds Completed**: 22/22 ✅
+  - **Round Progression**: Perfect - all rounds transitioned correctly
+  - **No Crashes**: Season completed successfully
+- **Issues Found**:
+  1. **Text Display Overflow**: "er laps" shown before race starts (lap count display corruption)
+  2. **Points Cap at 255**: Driver and constructor points capped at 255, affecting final standings
+- **Notes**:
+  - Points cap is expected - this is the known byte overflow that Phase 3 (16-bit points) will fix
+  - "er laps" issue needs investigation in display rendering code
+  - Overall game flow works correctly through all 22 rounds
 
 ## Next Immediate Steps
 
-1. **Phase 0.5**: Run baseline automated test of boundary-experimental (IMMEDIATE)
-2. **Phase 1.1**: Investigate 128K Spectrum for 16-bit points
-3. **Phase 1.2**: Complete grid array grounding (6 to-ground items)
+1. **Phase 1.1**: Investigate 128K Spectrum for 16-bit points (NEXT)
+2. **Phase 1.2**: Complete grid array grounding (6 to-ground items)
+3. **Investigate**: "er laps" display corruption issue (display rendering code)
 
 ## Known Issues
 
