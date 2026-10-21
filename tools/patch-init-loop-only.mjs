@@ -15,30 +15,10 @@ const NEW_ADDRESSES = {
   carState4: 0xAAB0
 };
 
-console.log("Updating loop counters:");
-console.log("  Constructor points: 6 teams -> 10 teams");
-console.log("  Driver points: 24 bytes -> 40 bytes (20 drivers)");
+console.log("Updating car arrays loop (constructor/driver points skipped for now):");
 console.log("  Car arrays: 12 cars -> 20 cars\n");
 
-// Update constructor points loop at 0xC91B
-const constructorLoopAddr = 0xC91B - 0x4000 + 0x1B;
-if (ram[constructorLoopAddr] === 0x06) {
-  ram[constructorLoopAddr] = 0x0A; // 10 in decimal
-  console.log("✓ Updated constructor points loop: 6 -> 10 teams at 0xC91B");
-} else {
-  console.log(`✗ WARNING: Constructor points loop byte at 0xC91B is ${ram[constructorLoopAddr]}, expected 0x06`);
-}
-
-// Update driver points loop at 0xC91C
-const driverPointsLoopAddr = 0xC91C - 0x4000 + 0x1B;
-if (ram[driverPointsLoopAddr] === 0x18) {
-  ram[driverPointsLoopAddr] = 0x28; // 40 in decimal
-  console.log("✓ Updated driver points loop: 24 -> 40 bytes at 0xC91C");
-} else {
-  console.log(`✗ WARNING: Driver points loop byte at 0xC91C is ${ram[driverPointsLoopAddr]}, expected 0x18`);
-}
-
-// Update car arrays loop at 0xC91C (same as driver points in this version)
+// Update car arrays loop at 0xC91C
 const carLoopAddr = 0xC91C - 0x4000 + 0x1B;
 if (ram[carLoopAddr] === 0x0C) {
   ram[carLoopAddr] = 0x14; // 20 in decimal
@@ -79,14 +59,14 @@ if (ram[carStateBLoadAddr] === 0xFD && ram[carStateBLoadAddr + 1] === 0x21 && ra
   console.log(`✗ WARNING: Car state B load at 0xC921 is ${ram[carStateBLoadAddr].toString(16)} ${ram[carStateBLoadAddr+1].toString(16)} ${ram[carStateBLoadAddr+2].toString(16)} ${ram[carStateBLoadAddr+3].toString(16)}, expected FD 21 85 69`);
 }
 
-// 0xC926: LD DE,0x6979 -> LD DE,0xAA70
-const carStateALoadAddr = 0xC926 - 0x4000 + 0x1B;
+// 0xC925: LD DE,0x6979 -> LD DE,0xAA70
+const carStateALoadAddr = 0xC925 - 0x4000 + 0x1B;
 if (ram[carStateALoadAddr] === 0x11 && ram[carStateALoadAddr + 1] === 0x79 && ram[carStateALoadAddr + 2] === 0x69) {
   ram[carStateALoadAddr + 1] = 0x70;
   ram[carStateALoadAddr + 2] = 0xAA;
-  console.log("✓ Updated car state A load: 0x6979 -> 0xAA70 at 0xC926");
+  console.log("✓ Updated car state A load: 0x6979 -> 0xAA70 at 0xC925");
 } else {
-  console.log(`✗ WARNING: Car state A load at 0xC926 is ${ram[carStateALoadAddr].toString(16)} ${ram[carStateALoadAddr+1].toString(16)} ${ram[carStateALoadAddr+2].toString(16)}, expected 11 79 69`);
+  console.log(`✗ WARNING: Car state A load at 0xC925 is ${ram[carStateALoadAddr].toString(16)} ${ram[carStateALoadAddr+1].toString(16)} ${ram[carStateALoadAddr+2].toString(16)}, expected 11 79 69`);
 }
 
 console.log("\nVerifying patched code:");
