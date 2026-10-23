@@ -122,7 +122,38 @@ Not all references are direct load instructions. Need to categorize each:
 | 0xE292 | 0x6A51 | 90 87 21 c4 | Needs analysis |
 | 0xE61D | 0x6991 | 59 1d 19 7e | Needs analysis |
 
-## Initialization Loop (0xC910-C960)
+## Critical Discovery: Boundary Patch Relocated Init Loop
+
+### Finding
+The boundary-experimental snapshot has a **different code layout** than the original. The initialization loop that was at 0xC910-C960 in the original game has been **moved by the boundary patch**.
+
+### Actual Init Loop Location in f12023-boundary-experimental.sna
+- **Start**: 0xC915
+- **End**: 0xC930
+- **Length**: ~27 bytes (compressed from original)
+
+### Code Found at 0xC915-0xC930
+```
+0xC915: FD E5        PUSH IY
+0xC917: F3           DI
+0xC918: 21 91 69     LD HL,0x6991  <- car→driver map
+0xC91B: 06 0C        LD B,0x0C     <- car loop counter (12 cars)
+0xC91D: DD 21 51 6A  LD IX,0x6A51  <- car state 4
+0xC921: FD 21 85 69  LD IY,0x6985  <- car state B
+0xC926: 11 79 69     LD DE,0x6979  <- car state A
+```
+
+### Implications
+1. **Use boundary-experimental as baseline** - don't use original f12023.sna
+2. **Patches must target moved addresses** - old addresses won't work
+3. **Constructor/driver points loops may be elsewhere** - need to locate them
+4. **Reference sites may also be moved** - need to re-scan for actual locations
+
+### Next Actions
+1. Re-run `z80-inspect.mjs refs` on boundary-experimental to get actual reference locations
+2. Locate constructor points and driver points initialization loops in boundary-experimental
+3. Update patch tool with correct addresses from boundary-experimental
+4. Test patches on boundary-experimental only
 The initialization loop that sets up the arrays needs updates:
 
 ### Current Loop Counters:
@@ -160,7 +191,57 @@ Each reference site needs:
 4. Determine the correct patch for that instruction type
 5. Document the patch before applying
 
+## Test Failure (2026-10-22)
+
+### Attempted Patch
+- Changed init loop counter 0xC936 from 0x0C (12) to 0x14 (20)
+- Patched 4 array load instructions in init loop
+- Patched 19 direct load instructions throughout code
+- Kept constructor points at 6 teams (season data limitation)
+
+### Result
+**CRASHED**
+
+### Symptoms
+- Only 1 car spawned instead of 12 or 20
+- After 3 races, Spectrum crashed completely
+- Graphics were corrupted
+- Garbled data displayed everywhere
+
+### Root Cause Analysis
+The patching approach was too aggressive and incomplete:
+
+1. **Init loop patch changed game state** - Changing the car counter from 12 to 20 breaks the game's assumptions about grid size
+2. **Only patched subset of references** - 47 total references, only 23 patched
+3. **New array locations may not be safe** - 0xAA70+ region might contain code/data
+4. **Driver/constructor points not properly aligned** - Keeping 6 teams but expanding to 20 cars creates mismatch
+5. **Race flow code expects 12 cars** - Display, sorting, positioning code all assume 12-car grid
+
+### Conclusion
+**Current approach is fundamentally flawed.** Simply patching array addresses and loop counters without understanding the full game architecture causes catastrophic failures.
+
+### New Approach Required
+Instead of blind patching, we need to:
+
+1. **Understand the complete car lifecycle** - from initialization through race to standings
+2. **Identify all systems that depend on grid size** - display, input, AI, scoring
+3. **Determine minimum viable change set** - what MUST change vs what CAN change
+4. **Consider alternative approaches**:
+   - Keep 12-car grid but rotate drivers through it
+   - Create separate snapshots for different eras with appropriate grid sizes
+   - Use 128K banking for larger grids (complex but safer)
+   - Accept 12-car limit for this project scope
+
+### Decision Needed
+Before proceeding, user must decide:
+- **Option A**: Abandon 20-car expansion, keep 12-car limit as-is
+- **Option B**: Do full architectural analysis before attempting any patches
+- **Option C**: Use 128K banking approach (requires snapshot format conversion)
+- **Option D**: Create era-specific snapshots with appropriate grid sizes (12 for 1950s-80s, 20+ for modern)
+
 ## Next Steps
+
+### PHASE PAUSED - AWAITING USER DECISION
 
 ### Phase 1: Categorize All References
 For each of the 47 reference sites:

@@ -30,6 +30,14 @@
 - **Fix**: Phase 3 - 16-bit championship points implementation
 - **Priority**: High - affects game accuracy for modern seasons
 
+#### 3. Tape Save Prompt Hang (NEW)
+- **Symptom**: Game asks to save halfway through season; if yes, it hangs
+- **Root Cause**: Expects ZX Spectrum tape save mechanism (obsolete in QAOP)
+- **Impact**: Blocks automated testing; requires manual intervention
+- **Potential Benefit**: Removing this could free Z80 code space for grid expansion
+- **Suggested Fix**: Remove tape save prompt entirely; QAOP has F2/F3 state save
+- **Priority**: Medium - quality-of-life improvement, potential code space gain
+
 ## Round Progression Log
 ```
 Round 0: 0.0s (initial)
