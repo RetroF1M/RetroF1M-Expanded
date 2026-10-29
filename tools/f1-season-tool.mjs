@@ -9,7 +9,7 @@ const SNA_48K_SIZE = 49179;
 const OFFSETS = {
   drivers: { offset: 11948, count: 24, width: 10 },
   driverSpecials: { offset: 12188, count: 2, width: 10 },
-  teams: { offset: 12216, count: 8, width: 8 },
+  teams: { offset: 12216, count: 10, width: 8 },
   managers: { offset: 12286, count: 6, width: 10 },
   circuitGridText: { offset: 12353, length: 127 },
   circuits: { offset: 12480, count: 16, width: 18 },

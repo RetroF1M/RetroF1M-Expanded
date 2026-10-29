@@ -1,0 +1,431 @@
+{
+  "source": "seasons/f12023-boundary-experimental.sna",
+  "format": "RetroF1M Formula One 48K SNA season data v1",
+  "notes": [
+    "This edits the fixed-width data tables already present in the Formula One snapshot.",
+    "The original engine still has sixteen circuit slots and byte-sized championship totals unless deeper Z80 code is patched.",
+    "points values are per-race awards; the build step patches the award loop to match the number of non-zero positions."
+  ],
+  "seasonYear": 2023,
+  "drivers": [
+    "Verstappen",
+    "Hamilton",
+    "Leclerc",
+    "Sainz",
+    "Alonso",
+    "Perez",
+    "Russell",
+    "Ocon",
+    "Gasly",
+    "Norris",
+    "Albon",
+    "Piastri",
+    "Bottas",
+    "Zhou",
+    "Stroll",
+    "Tsunoda",
+    "Magnussen",
+    "Hulkenberg",
+    "Sargeant",
+    "De Vries",
+    "Ricciardo",
+    "Schumacher",
+    "Fittipaldi",
+    "Giovinazzi"
+  ],
+  "driverSpecials": [
+    "No Driver",
+    "N/A"
+  ],
+  "teams": [
+    "Mercedes",
+    "Ferrari",
+    "RedBull",
+    "Mclaren",
+    "Aston",
+    "Alpine",
+    "AlphaT",
+    "Williams",
+    "Alfa",
+    "Haas"
+  ],
+  "managers": [
+    "T. Wolff",
+    "F. Vasseur",
+    "C. Horner",
+    "Z. Brown",
+    "M. Krack",
+    "Szafnauer"
+  ],
+  "points": [
+    25,
+    18,
+    15,
+    12,
+    10,
+    8,
+    6,
+    4,
+    2,
+    1
+  ],
+  "circuits": [
+    {
+      "name": "Sakhir",
+      "laps": 57,
+      "lapRecordTenths": 935,
+      "raceRecordTenths": 945,
+      "trackLengthHundredths": 363,
+      "lapRecordYear": 2022,
+      "driverRefs": [
+        3,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "name": "Jeddah",
+      "laps": 50,
+      "lapRecordTenths": 906,
+      "raceRecordTenths": 916,
+      "trackLengthHundredths": 384,
+      "lapRecordYear": 2022,
+      "driverRefs": [
+        10,
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "name": "Melbourne",
+      "laps": 58,
+      "lapRecordTenths": 792,
+      "raceRecordTenths": 802,
+      "trackLengthHundredths": 328,
+      "lapRecordYear": 2022,
+      "driverRefs": [
+        1,
+        1,
+        1,
+        2
+      ]
+    },
+    {
+      "name": "Miami Autodrome",
+      "laps": 57,
+      "lapRecordTenths": 903,
+      "raceRecordTenths": 913,
+      "trackLengthHundredths": 336,
+      "lapRecordYear": 2022,
+      "driverRefs": [
+        7,
+        7,
+        26,
+        10
+      ]
+    },
+    {
+      "name": "Circuit de Monaco",
+      "laps": 78,
+      "lapRecordTenths": 736,
+      "raceRecordTenths": 746,
+      "trackLengthHundredths": 207,
+      "lapRecordYear": 2022,
+      "driverRefs": [
+        2,
+        2,
+        2,
+        3
+      ]
+    },
+    {
+      "name": "Gilles Villeneuve",
+      "laps": 70,
+      "lapRecordTenths": 747,
+      "raceRecordTenths": 757,
+      "trackLengthHundredths": 271,
+      "lapRecordYear": 2022,
+      "driverRefs": [
+        4,
+        2,
+        1,
+        3
+      ]
+    },
+    {
+      "name": "Silverstone",
+      "laps": 52,
+      "lapRecordTenths": 895,
+      "raceRecordTenths": 905,
+      "trackLengthHundredths": 366,
+      "lapRecordYear": 2022,
+      "driverRefs": [
+        3,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "name": "Spa-Francochamps",
+      "laps": 44,
+      "lapRecordTenths": 1083,
+      "raceRecordTenths": 1093,
+      "trackLengthHundredths": 435,
+      "lapRecordYear": 2022,
+      "driverRefs": [
+        1,
+        1,
+        3,
+        4
+      ]
+    },
+    {
+      "name": "Zandvoort",
+      "laps": 72,
+      "lapRecordTenths": 726,
+      "raceRecordTenths": 736,
+      "trackLengthHundredths": 265,
+      "lapRecordYear": 2022,
+      "driverRefs": [
+        3,
+        1,
+        3,
+        1
+      ]
+    },
+    {
+      "name": "Monza",
+      "laps": 53,
+      "lapRecordTenths": 830,
+      "raceRecordTenths": 840,
+      "trackLengthHundredths": 360,
+      "lapRecordYear": 2022,
+      "driverRefs": [
+        6,
+        1,
+        4,
+        1
+      ]
+    },
+    {
+      "name": "Suzuka",
+      "laps": 53,
+      "lapRecordTenths": 883,
+      "raceRecordTenths": 893,
+      "trackLengthHundredths": 361,
+      "lapRecordYear": 2022,
+      "driverRefs": [
+        1,
+        1,
+        1,
+        26
+      ]
+    },
+    {
+      "name": "Lusail Circuit",
+      "laps": 57,
+      "lapRecordTenths": 798,
+      "raceRecordTenths": 808,
+      "trackLengthHundredths": 337,
+      "lapRecordYear": 2021,
+      "driverRefs": [
+        1,
+        7,
+        26,
+        1
+      ]
+    },
+    {
+      "name": "Mexico City",
+      "laps": 71,
+      "lapRecordTenths": 791,
+      "raceRecordTenths": 801,
+      "trackLengthHundredths": 267,
+      "lapRecordYear": 2022,
+      "driverRefs": [
+        2,
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "name": "Interlagos",
+      "laps": 71,
+      "lapRecordTenths": 727,
+      "raceRecordTenths": 737,
+      "trackLengthHundredths": 268,
+      "lapRecordYear": 2022,
+      "driverRefs": [
+        3,
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "name": "Las Vegas",
+      "laps": 50,
+      "lapRecordTenths": 900,
+      "raceRecordTenths": 910,
+      "trackLengthHundredths": 380,
+      "lapRecordYear": 2022,
+      "driverRefs": [
+        3,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "name": "Yas Marina",
+      "laps": 58,
+      "lapRecordTenths": 873,
+      "raceRecordTenths": 883,
+      "trackLengthHundredths": 328,
+      "lapRecordYear": 2022,
+      "driverRefs": [
+        3,
+        1,
+        1,
+        3
+      ]
+    }
+  ],
+  "sponsors": [
+    "Petronas",
+    "Gulf",
+    "Cognizant",
+    "Aramco",
+    "Oracle",
+    "Kick",
+    "Stake",
+    "Ineos",
+    "Shell",
+    "Honda",
+    "Google",
+    "Citrix",
+    "VMWare"
+  ],
+  "incidents": [
+    "Retired - electronics failure",
+    "Retired - stalled after spin",
+    "Retired - MGU-K failure",
+    "Retired - MGU-H failure",
+    "Retired - gearbox failure",
+    "Crashed - driver unhurt",
+    "Crashed - driver injured",
+    "Retired - turbo failure",
+    "Spun after shunt - Pit stop due",
+    "Spun:Chassis damage - Stop due",
+    "Spun and lost time - no damage",
+    "Floor damage - coming into pits",
+    "Wing damage - Pit stop due",
+    "Puncture - Pit stop required"
+  ],
+  "circuitGridText": "Bahrain   Saudi  Aussie   Miami  MonacoCanadian British Belgian   Dutch ItalianJapanese   Qatar Mexican  Brazil     USAAbuDhabi",
+  "trackReportGridText": "Bahrain  Saudi  Aussie   Miami  Monaco Canadian British Belgian  Dutch  ItalianJapanese  Qatar  Mexican Brazil    USA  AbuDhabi",
+  "offsets": {
+    "drivers": {
+      "offset": 11948,
+      "count": 24,
+      "width": 10,
+      "ram": 28305
+    },
+    "driverSpecials": {
+      "offset": 12188,
+      "count": 2,
+      "width": 10,
+      "ram": 28545
+    },
+    "teams": {
+      "offset": 12216,
+      "count": 8,
+      "width": 8,
+      "ram": 28573
+    },
+    "managers": {
+      "offset": 12286,
+      "count": 6,
+      "width": 10,
+      "ram": 28643
+    },
+    "circuitGridText": {
+      "offset": 12353,
+      "length": 127,
+      "ram": 28710
+    },
+    "circuits": {
+      "offset": 12480,
+      "count": 16,
+      "width": 18,
+      "ram": 28837
+    },
+    "lapCounts": {
+      "offset": 10992,
+      "count": 16,
+      "ram": 27349
+    },
+    "lapRecordTenths": {
+      "offset": 11008,
+      "count": 16,
+      "ram": 27365
+    },
+    "raceRecordTenths": {
+      "offset": 11040,
+      "count": 16,
+      "ram": 27397
+    },
+    "circuitDriverRefs": {
+      "offset": 11072,
+      "count": 16,
+      "width": 4,
+      "ram": 27429
+    },
+    "trackLengthHundredths": {
+      "offset": 11136,
+      "count": 16,
+      "ram": 27493
+    },
+    "lapRecordYears": {
+      "offset": 11168,
+      "count": 16,
+      "ram": 27525
+    },
+    "points": {
+      "offset": 15281,
+      "count": 16,
+      "ram": 31638
+    },
+    "incidents": {
+      "offset": 15370,
+      "count": 14,
+      "width": 32,
+      "ram": 31727
+    },
+    "sponsors": {
+      "offset": 18316,
+      "count": 13,
+      "width": 12,
+      "ram": 34673
+    },
+    "seasonYear": {
+      "offset": 19243,
+      "length": 4,
+      "ram": 35600
+    },
+    "trackReportGridText": {
+      "offset": 21534,
+      "length": 127,
+      "ram": 37891
+    },
+    "lapCountsDisplay": {
+      "offset": 21665,
+      "length": 32,
+      "ram": 38022
+    }
+  }
+}

@@ -1,0 +1,20 @@
+[      35ms] [WARNING] Manifest: property 'start_url' ignored, should be same origin as document. @ http://127.0.0.1:8000/qaop/site.webmanifest:0
+[     189ms] [WARNING] The ScriptProcessorNode is deprecated. Use AudioWorkletNode instead. (https://bit.ly/audio-worklet) @ http://127.0.0.1:8000/qaop/qaop.js:1
+[     190ms] [LOG] ScriptProcessorNode @ http://127.0.0.1:8000/qaop/qaop.js:1
+[    7863ms] [LOG] === Testing 20-Car Init Loop Patch === @ :4
+[    7863ms] [LOG] 
+Old array locations (should be unused/unchanged): @ :7
+[    7863ms] [LOG] 0x6979 (car state A): 0 @ :8
+[    7863ms] [LOG] 0x6985 (car state B): 0 @ :9
+[    7863ms] [LOG] 0x6991 (car map): 0 @ :10
+[    7863ms] [LOG] 0x6A51 (car state 4): 0 @ :11
+[    7863ms] [LOG] 
+New array locations (should be initialized): @ :14
+[    7863ms] [LOG] 0xAA70 (car state A): fb @ :15
+[    7863ms] [LOG] 0xAA84 (car state B): c5 @ :16
+[    7863ms] [LOG] 0xAA98 (car map): 6 @ :17
+[    7863ms] [LOG] 0xAAB0 (car state 4): ef @ :18
+[    7863ms] [LOG] 
+Checking if new arrays are initialized: @ :21
+[    7863ms] [LOG] Car 0: A=fb, B=c5, Map=6, 4=ef @ :29
+[    7863ms] [LOG] Car 19: A=6c, B=ec, Map=3e, 4=3 @ :29

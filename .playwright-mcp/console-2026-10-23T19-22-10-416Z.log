@@ -1,0 +1,3 @@
+[     244ms] [WARNING] The ScriptProcessorNode is deprecated. Use AudioWorkletNode instead. (https://bit.ly/audio-worklet) @ http://127.0.0.1:8000/qaop/qaop.js:1
+[     244ms] [LOG] ScriptProcessorNode @ http://127.0.0.1:8000/qaop/qaop.js:1
+[     271ms] [WARNING] Manifest: property 'start_url' ignored, should be same origin as document. @ http://127.0.0.1:8000/qaop/site.webmanifest:0
