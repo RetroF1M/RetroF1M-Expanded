@@ -13,17 +13,22 @@ function off(addr) {
 console.log("=== 20-Car Complete Patch ===");
 console.log("10 teams already added to season data\n");
 
-// 1. Init loop counter
+// 1. Constructor points loop (determines team count)
+const constAddr = off(0xC912);
+data[constAddr] = 0x0A;
+console.log("✓ Constructor loop 0xC912: 6 → 10 teams");
+
+// 2. Init loop counter (cars)
 const initAddr = off(0xC936);
 data[initAddr] = 0x14;
 console.log("✓ Init loop 0xC936: 12 → 20 cars");
 
-// 2. Display loop counter
+// 3. Display loop counter
 const dispAddr = off(0xA4A6);
 data[dispAddr] = 0x14;
 console.log("✓ Display loop 0xA4A6: 12 → 20 cars");
 
-// 3. Display check
+// 4. Display check
 const checkAddr = off(0xA4B1);
 data[checkAddr] = 0x14;
 console.log("✓ Display check 0xA4B1: 12 → 20 cars");
