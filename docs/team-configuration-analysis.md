@@ -1,83 +1,163 @@
-# Team Configuration Analysis
+# Team Configuration Analysis - Master Document
 
 ## Problem
-The user reported that adding team names to the static table doesn't activate teams. Teams need full configuration: decals, drivers, sponsors, upgrades, pit stops, transfers, etc.
+Adding team names to static tables doesn't activate teams. Teams need full configuration: decals, drivers, sponsors, upgrades, pit stops, transfers, AI behavior, car numbers, funds.
 
-## Team Active Table (0x701F)
-The initialization code at 0xC964-0xC96D checks a team active table:
-```z80
-LD HL,0x701F    ; Base address
-LD E,B          ; B = team index (0, 2, 4, 6, 8, 10)
-SRL E           ; E = team index / 2 (0, 1, 2, 3, 4, 5)
-ADD HL,DE       ; HL = 0x701F + team_index/2
-LD A,(HL)       ; Read active flag
-CP 0x01         ; Check if == 1
-```
+## Current Status
+- ✅ Static text tables expanded (teams: 8→10, managers: 6→10)
+- ✅ Team active flags expanded (0x701F: 6→10 bytes)
+- ✅ Loop counters patched (6→10 teams, 12→20 cars)
+- ❌ Teams still not wired - need actual configuration data
 
-This suggests:
-- Table at 0x701F contains 1-byte active flags per team
-- Indexed by team_index/2 (so team 0,2,4,6,8,10 → index 0,1,2,3,4,5)
-- Value 0x01 = active, other = inactive
+## Known Team Structures
 
-## Team Graphics/Decal Data (0x6F00-0x6FA0)
-The display code at 0x96AA-0x96DD loads graphics data:
-```z80
-LD HL,0x6FDD    ; Primary graphics table
-LD E,A          ; A = team index
-SRL E           ; E = team index / 2
-ADD HL,DE       ; HL = 0x6FDD + team_index/2
-LD A,(HL)       ; Load graphics byte
-OUT (0xFE),A    ; Send to display
-```
+### Team Active Table (0x701F)
+- 1 byte per team, value 0x01 = active
+- Indexed by team index (0-5 for 6 teams)
+- Checked in initialization loop at 0xC964-0xC96D
 
-Looking at 0x6F00-0x6FA0, there's a pattern of ~17-byte entries:
-- 0x6F00: Entry 0
-- 0x6F11: Entry 1 (0x6F00 + 0x11)
-- 0x6F22: Entry 2 (0x6F11 + 0x11)
-- 0x6F33: Entry 3 (0x6F22 + 0x11)
-- 0x6F44: Entry 4 (0x6F33 + 0x11)
-- 0x6F55: Entry 5 (0x6F44 + 0x11)
-- 0x6F66: Entry 6 (0x6F55 + 0x11)
+### Team Graphics (0x6FDD+)
+- Display routine at 0x96AA loads from 0x6FDD
+- Indexed by team index
+- Contains sprite/UDG data for car graphics
 
-This is 7 entries (0-6), but we only have 6 teams. Need to understand the structure.
+### Static Text Tables (File Offsets)
+- Teams: offset 12216, 8 chars per team (just names)
+- Managers: offset 12286, 10 chars per manager (just names)
+- These are LABELS only, not configuration
 
-## Team Activation Loop (0xC960-0xC9EB)
-The main team activation loop:
-```z80
-LD B,0x01        ; Start with car index 1
-loop:
-LD E,B
-DEC E            ; E = car index - 1
-SRL E            ; E = (car index - 1) / 2 = team index
-LD HL,0x701F
-ADD HL,DE        ; HL = 0x701F + team index
-LD A,(HL)        ; Read team active flag
-CP 0x01
-JP C,skip_team   ; If flag < 1, skip this team
-CALL 0x96AA      ; Display team graphics
-CALL 0xC9F4      ; Initialize team
-INC B            ; B += 2 (next car in same team)
-INC B
-LD A,0x0C        ; Compare against 12 cars
-CP B
-JP NC,loop       ; If B < 12, continue
-```
+## Required Team Configuration (What We Need to Find)
 
-This shows:
+### 1. Car Numbers
+- Each team needs 2 car numbers (e.g., Mercedes: 44, 63)
+- Must be displayed on cars
+- Used for pit stop identification
+- Likely in static data or calculated from team index
+
+### 2. Sponsor Assignments
+- Each team assigned to a sponsor (e.g., Mercedes → Petronas)
+- Sponsor affects funds/income
+- Likely 1 byte per team mapping to sponsor ID
+
+### 3. Driver Assignments
+- Each team hires 2 drivers from driver pool
+- Driver pool: 24 drivers available
+- Assignment happens during team setup phase
+- Need driver hiring logic and assignment storage
+
+### 4. Car Upgrade State
+- Reliability rating
+- Speed rating
+- Aerodynamics rating
+- Likely per-team runtime arrays
+
+### 5. Team Funds/Balance
+- 16-bit money value per team
+- Affected by sponsors, race results
+- Used for upgrades
+
+### 6. Pit Stop Strategy
+- AI behavior for pit stops
+- Tire strategy
+- Fuel strategy
+- Likely per-team configuration
+
+### 7. Decals/Visual Identity
+- Team-specific car graphics
+- Already found at 0x6FDD+ but structure unclear
+- Need to expand for 10 teams
+
+### 8. AI Behavior
+- Aggressiveness
+- Skill level
+- Drafting behavior
+- Likely per-team runtime values
+
+## Investigation Findings
+
+### ✅ Car Numbers - Runtime Generated
+**Location**: File offset 8522 (RAM 0x6FCB)
+**Structure**: 12 bytes (1 byte per car)
+**Data**: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+**Purpose**: Car numbers in grid order
+**Conclusion**: Sequential (1-12), likely generated at runtime from car index
+
+### ✅ Driver Assignment Logic - FOUND
+**Location**: 0xC960-0xC9D2 (team activation loop)
+**Key operations**:
+- 0xC9C8: `LD HL,0x6991` - Car→driver map array
+- 0xC9D0: `LD (HL),A` - Assign driver to car
+- 0xC9B4: `LD HL,0x692F` - Special array (24 bytes)
+- 0xC9C7: `LD (HL),B` - Track car assignment
+
+**Logic**:
 - Loop iterates by car (1, 3, 5, 7, 9, 11)
 - Team index = (car index - 1) / 2
-- Only activates teams where active flag == 1
-- Hardcoded limit of 12 cars (0x0C)
+- Checks team active flag at 0x701F
+- Assigns driver to car at 0x6991
+- Tracks assignments in 0x692F
 
-## Missing Data Structures
-To fully wire up teams, we need to find:
-1. **Car numbers per team** - Must be somewhere in static data
-2. **Sponsor assignments per team** - Maps team ID to sponsor ID
-3. **Driver pool and assignments** - How drivers are hired per team
-4. **Car upgrade state per team** - Reliability, speed, etc.
-5. **Team funds/balance** - 16-bit money value
-6. **Pit stop strategy per team** - AI behavior
-7. **Driver transfer logic** - How drivers move between teams
+### ✅ Runtime Arrays (from initialization at 0xC906)
+- 0x6910: Constructor points (6 teams × 1 byte)
+- 0x6948: Driver points (12 drivers × 2 bytes)
+- 0x692F: Special array (24 bytes) - driver assignment tracking
+- 0x6979: Car state A (12 cars × 1 byte)
+- 0x6985: Car state B (12 cars × 1 byte)
+- 0x6991: Car→driver map (12 cars × 1 byte)
+- 0x6A51: Car state 4 (12 cars × 1 byte)
+
+### ❌ Missing Configuration
+- **Sponsor assignments**: Not found in static data, likely runtime or hardcoded
+- **Team funds/upgrades**: Not found, likely runtime or default values
+- **Pit stop strategy**: Not found, likely runtime AI
+- **Decals**: Graphics at 0x6FDD+ but structure unclear
+
+### Critical Insight
+The game appears to use:
+- Static data: Names (teams, managers, drivers, sponsors, circuits)
+- Runtime data: Arrays for cars, drivers, points, assignments
+- Car numbers: Generated sequentially (1-12)
+- Team configuration: Minimal - mostly just names and active flags
+
+This suggests the original game design assumes 6 teams with 2 cars each, and most configuration is either:
+1. Hardcoded in the code
+2. Generated at runtime
+3. Set to default values
+
+### Expansion Strategy
+
+**NO RELocation Needed** - Found sufficient gaps:
+
+1. **Points array (0x6910)**: 6 → 10 teams (add 4 bytes)
+   - Gap to next array: 25 bytes ✅ Sufficient
+
+2. **Driver points (0x6948)**: 12 → 20 drivers (add 16 bytes)
+   - Gap to next array: 25 bytes ✅ Sufficient
+
+3. **Car arrays (0x6979, 0x6985, 0x6991, 0x6A51)**: 12 → 20 cars (add 8 bytes each = 32 bytes)
+   - Gap after carMap: 180 bytes ✅ Sufficient
+
+4. **Special array (0x692F)**: 24 bytes → 40 bytes (for 20 drivers)
+   - MOVED to 0x6958 (after driverPoints) to make room
+
+**Completed Patches**:
+1. ✅ Expand points: 0x6910 (6→10 bytes)
+2. ✅ Move special array: 0x692F → 0x6958
+3. ✅ Expand driver points: 0x6948 (24→40 bytes)
+4. ✅ Expand special array: 0x6958 (24→40 bytes)
+5. ✅ Expand car arrays: 0x6979, 0x6985, 0x6991, 0x6A51 (12→20 bytes each)
+6. ✅ Update special array reference: 0xC9B4 (0x692F → 0x6958)
+7. ✅ Update loop counters: 0xC912, 0xC936, 0xA4A6, 0xA4B1
+8. ✅ Expand static name tables (teams, managers)
+9. ✅ Add team active flags
+
+**Remaining Work**:
+- Need to update other 46 reference sites to the expanded arrays
+- Need to investigate and add team graphics/decal entries
+- Test in QAOP
+
+## Baseline
+Using: `f12023-boundary-experimental.sna` (has points patch + new races)
 
 ## Discovery: Team Configuration Table (0x2FDC-0x2FDF)
 
