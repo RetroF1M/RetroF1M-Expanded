@@ -146,15 +146,28 @@ This suggests the original game design assumes 6 teams with 2 cars each, and mos
 3. ✅ Expand driver points: 0x6948 (24→40 bytes)
 4. ✅ Expand special array: 0x6958 (24→40 bytes)
 5. ✅ Expand car arrays: 0x6979, 0x6985, 0x6991, 0x6A51 (12→20 bytes each)
-6. ✅ Update special array reference: 0xC9B4 (0x692F → 0x6958)
+6. ✅ Update special array references: 10 sites (0x692F → 0x6958)
 7. ✅ Update loop counters: 0xC912, 0xC936, 0xA4A6, 0xA4B1
 8. ✅ Expand static name tables (teams, managers)
 9. ✅ Add team active flags
 
-**Remaining Work**:
-- Need to update other 46 reference sites to the expanded arrays
-- Need to investigate and add team graphics/decal entries
-- Test in QAOP
+## Test Results - FAILED
+
+**Snapshot**: seasons/f12023-20car-expanded.sna
+**Status**: CRITICAL FAILURE
+
+**Issues**:
+1. Cannot select team - stuck on "Please select team" screen
+2. 0 players mode broken - shows sponsor selection for ALL teams (should skip)
+3. Text garbled: "Williams for Mercedes", "AlfaRomeHa for Ferrari", "as     ner for Red Bull"
+4. If skip sponsors: "Formula 1 racing cancelled due to lack of interest" + game freaks out
+
+**Root Cause Analysis**:
+- Text garbling suggests static data expansion overwrote critical data
+- Sponsor selection in 0-player mode suggests loop counter changes broke game flow
+- Game freeze/crash indicates array expansion corrupted something critical
+
+**Conclusion**: The in-place expansion approach was too aggressive. Need to revert and try a more conservative approach.
 
 ## Baseline
 Using: `f12023-boundary-experimental.sna` (has points patch + new races)

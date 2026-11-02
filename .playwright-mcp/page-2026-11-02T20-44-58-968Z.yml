@@ -1,0 +1,93 @@
+- generic [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e5]: "1"
+    - generic [ref=e6]: "2"
+    - generic [ref=e7]: "3"
+    - generic [ref=e8]: "4"
+    - generic [ref=e9]: "5"
+    - generic [ref=e10]: "6"
+    - generic [ref=e11]: "7"
+    - generic [ref=e12]: "8"
+    - generic [ref=e13]: "9"
+    - generic [ref=e14]: "0"
+    - generic [ref=e15]: Q
+    - generic [ref=e16]: W
+    - generic [ref=e17]: E
+    - generic [ref=e18]: R
+    - generic [ref=e19]: T
+    - generic [ref=e20]: "Y"
+    - generic [ref=e21]: U
+    - generic [ref=e22]: I
+    - generic [ref=e23]: O
+    - generic [ref=e24]: P
+    - generic [ref=e25]: A
+    - generic [ref=e26]: S
+    - generic [ref=e27]: D
+    - generic [ref=e28]: F
+    - generic [ref=e29]: G
+    - generic [ref=e30]: H
+    - generic [ref=e31]: J
+    - generic [ref=e32]: K
+    - generic [ref=e33]: L
+    - generic [ref=e34]: Enter
+    - generic [ref=e35]: Caps Shift
+    - generic [ref=e36]: Z
+    - generic [ref=e37]: X
+    - generic [ref=e38]: C
+    - generic [ref=e39]: V
+    - generic [ref=e40]: B
+    - generic [ref=e41]: "N"
+    - generic [ref=e42]: M
+    - generic [ref=e43]: Symbol Shift
+    - generic [ref=e44]: Space
+  - generic [ref=e45]:
+    - generic [ref=e46]:
+      - heading "Retro F1 Manager" [level=1] [ref=e47]
+      - link "Developed by Ethan Friedman, running in QAOP by Jan Bobrowski" [ref=e48] [cursor=pointer]:
+        - /url: /index.html
+      - generic [ref=e49]:
+        - button "Pause" [ref=e50]
+        - button "Save" [ref=e51]
+        - button "Load" [disabled] [ref=e52]
+        - button "Load from disk" [ref=e53]
+        - generic [ref=e54]:
+          - button "Mute" [ref=e55]
+          - button "Volume" [ref=e56]
+        - button "Pit keys off" [ref=e60]
+      - generic [ref=e61]:
+        - text: "Emulator Controls:"
+        - generic [ref=e62]:
+          - term: F1
+          - definition [ref=e63]:
+            - link "emulator info" [ref=e64] [cursor=pointer]:
+              - /url: /qaop/info.html
+          - term: F2
+          - definition [ref=e65]: save
+          - term: F3
+          - definition [ref=e66]: load
+          - term: F7
+          - definition [ref=e67]: black & white
+          - term: F8
+          - definition [ref=e68]: keyboard layout
+          - term: F9
+          - definition [ref=e69]: menu
+          - term: F11
+          - definition [ref=e70]: full screen
+          - term: Pause
+          - definition [ref=e71]: pause
+          - term: Ctrl-O
+          - definition [ref=e72]: Load from disk
+          - term: Ctrl-S
+          - definition [ref=e73]: Save to disk
+          - term: Pit keys
+          - definition [ref=e74]: optional arrow remap in full-screen play
+          - term
+    - link "© Jan Bobrowski | Ethan Friedman" [ref=e75] [cursor=pointer]:
+      - /url: /index.html
+  - generic [ref=e77]:
+    - button "Saves" [ref=e79]
+    - generic [ref=e81]:
+      - list [ref=e82]
+      - generic [ref=e83]:
+        - button "Save to disk" [ref=e84]
+        - button "Remove" [ref=e85]
