@@ -178,12 +178,48 @@ Static configuration:
    - 0xA4A6: 0x0C → 0x14 (12 → 20 display iterations)
    - 0xA4B1: 0x0C → 0x14 (12 → 20 comparison)
 
-## Implementation Plan
+## Implementation Progress
 
-1. Extract clean baseline from safe-original
-2. Edit static data tables:
-   - Add 4 manager names (10 total)
-   - Add 4 team config entries (car numbers, sponsors)
-   - Add 4 team active flags (set to 0x01)
-3. Patch loop counters
-4. Test in QAOP
+### ✅ Completed (v2 - Using boundary-experimental baseline)
+
+1. **Snapshot inventory created** - Documented all .sna files and their status
+2. **Static data expansion**:
+   - Teams table: 8 → 10 entries (file offset 12216)
+   - Managers table: 6 → 10 entries (file offset 12286)
+   - Added team names: AlphaT, Williams, AlfaRomeo, Haas
+   - Added manager names: Tost, Capito, Vasseur, Steiner
+3. **Team active table expansion**:
+   - 0x701F: 6 → 10 bytes (activated teams 6-9)
+4. **Loop counters patched**:
+   - 0xC912: 6 → 10 teams
+   - 0xC936: 12 → 20 cars
+   - 0xA4A6: 12 → 20 display iterations
+   - 0xA4B1: 12 → 20 comparison
+
+### ⚠️ Still Missing
+
+The current patch only modifies:
+- Static text tables (team names, manager names)
+- Team active flags
+- Loop counters
+
+**Missing team wiring**:
+- Car numbers per team
+- Sponsor assignments per team
+- Decals/graphics per team
+- Driver assignments per team
+- Car upgrade state per team
+- Team funds/balance
+- Pit stop strategy per team
+- AI behavior per team
+
+### Next Critical Investigation
+
+Need to find where the game actually stores and uses:
+1. **Car number to team mapping** - Which car number belongs to which team
+2. **Sponsor assignment** - Which sponsor each team uses
+3. **Driver hiring** - How drivers are assigned to teams
+4. **Decal selection** - How team graphics are selected
+5. **Runtime team state** - Funds, upgrades, etc.
+
+The static text tables are just labels. The actual team configuration must be in other data structures or calculated at runtime.
