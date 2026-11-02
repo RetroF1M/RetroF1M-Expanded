@@ -73,6 +73,40 @@ Adding team names to static tables doesn't activate teams. Teams need full confi
 - Drafting behavior
 - Likely per-team runtime values
 
+## Critical Failure - In-Place Expansion
+
+**Test Result**: FAILED - Game crashed, text garbled, sponsor selection broken
+
+**Root Cause**: Static data expansion (teams, managers) overwrote critical data. The gaps we thought were free were NOT actually free.
+
+**New Approach Needed**:
+1. Find truly free space in the snapshot (outside static data region)
+2. Or use 128K banking for additional data
+3. Or accept 12-car limit and focus on historical accuracy for eras that had ≤12 cars
+
+## Recommendation
+
+Given the severe memory constraints and the critical failure, I recommend:
+
+**Option A**: 128K Banking Approach
+- Use upper memory banks (0x8000+) for expanded arrays
+- Requires snapshot format conversion (48K → 128K)
+- Add bank-switching code
+- More complex but provides actual space
+
+**Option B**: Conservative 12-Car Focus
+- Accept 12-car limit for 48K snapshots
+- Focus on historical seasons that had ≤12 cars (1950s-1980s)
+- Modern eras would need 128K approach
+- Safer, preserves game stability
+
+**Option C**: Minimal 20-Car Patch
+- Only patch loop counters (no array expansion)
+- Use existing arrays with waste/overlap
+- Risky but minimal code changes
+
+**Which approach should we pursue?**
+
 ## Investigation Findings
 
 ### ✅ Car Numbers - Runtime Generated
